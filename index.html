@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Plan, Maestro. Simulador de Decisiones Territoriales</title>
+<style>
+:root{
+  --bg:#070b12;
+  --panel:#0d1422;
+  --panel2:#111b2d;
+  --panel3:#16243b;
+  --line:#2c3d55;
+  --text:#eef7ff;
+  --muted:#9fb0c4;
+  --cyan:#25d7ff;
+  --cyan2:#0ea5e9;
+  --red:#fb4d62;
+  --red2:#7f1d1d;
+  --green:#22c55e;
+  --yellow:#facc15;
+  --violet:#9b7cff;
+  --orange:#fb923c;
+  --dark:#050812;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 12% 12%,rgba(251,77,98,.22),transparent 30%),
+    radial-gradient(circle at 88% 15%,rgba(37,215,255,.22),transparent 32%),
+    linear-gradient(180deg,#07101d,#050812);
+}
+body:after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.22;
+  background-image:
+   linear-gradient(rgba(37,215,255,.15) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(37,215,255,.15) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(circle at center,#000 35%,transparent 90%);
+}
+.app{
+  position:relative;z-index:2;height:100vh;padding:12px;
+  display:grid;grid-template-rows:auto 1fr;gap:10px;
+}
+.topbar{
+  height:66px;background:linear-gradient(90deg,rgba(17,27,45,.96),rgba(9,15,27,.96));
+  border:1px solid var(--line);border-radius:18px;
+  display:flex;justify-content:space-between;align-items:center;padding:10px 14px;
+  box-shadow:0 0 30px rgba(0,0,0,.45), inset 0 0 28px rgba(37,215,255,.06);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.seal{
+  width:44px;height:44px;border-radius:50%;border:2px solid var(--cyan);
+  background:radial-gradient(circle,var(--cyan) 0 18%,#0b1020 19% 45%,var(--red) 46% 53%,transparent 54%);
+  box-shadow:0 0 18px rgba(37,215,255,.45);
+}
+.title{line-height:1}
+.title h1{margin:0;font-size:22px;letter-spacing:.2px;text-transform:uppercase}
+.title .by{margin-top:4px;color:var(--muted);font-size:12px;font-weight:700}
+.hudPills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pill{
+  border:1px solid var(--line);background:#0b1220;border-radius:999px;
+  padding:7px 10px;font-size:12px;font-weight:900;color:#d9edff;
+}
+.pill b{color:var(--cyan)}
+.main{
+  min-height:0;display:grid;grid-template-columns:330px minmax(620px,1fr) 390px;gap:10px;
+}
+.panel{
+  min-height:0;background:rgba(13,20,34,.96);border:1px solid var(--line);border-radius:18px;
+  box-shadow:0 18px 50px rgba(0,0,0,.45), inset 0 0 36px rgba(37,215,255,.04);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.panelHeader{
+  flex:0 0 auto;padding:10px 12px;border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(251,77,98,.14),rgba(37,215,255,.08));
+  text-transform:uppercase;letter-spacing:.9px;font-size:13px;font-weight:950;color:#dbeafe;
+}
+.panelHeader.cyan{background:linear-gradient(90deg,rgba(37,215,255,.16),rgba(14,165,233,.04))}
+.panelBody{padding:12px;overflow:auto;min-height:0}
+.crisisCard{
+  border:1px solid rgba(251,77,98,.55);border-radius:16px;padding:14px;
+  background:linear-gradient(180deg,rgba(127,29,29,.28),rgba(15,23,42,.96));
+  box-shadow:inset 0 0 38px rgba(251,77,98,.08),0 0 24px rgba(251,77,98,.08);
+}
+.crisisIcon{
+  width:70px;height:70px;border-radius:16px;display:grid;place-items:center;margin:0 auto 12px;
+  background:rgba(251,77,98,.18);border:1px solid rgba(251,77,98,.55);
+  font-size:34px;color:#fecaca;
+}
+.crisisTitle{font-size:18px;font-weight:950;color:#fecaca;text-align:center;margin-bottom:10px}
+.block{border:1px solid #334155;background:rgba(15,23,42,.82);border-radius:12px;padding:10px;margin-top:9px}
+.label{display:block;color:#7dd3fc;font-size:10px;text-transform:uppercase;letter-spacing:.9px;font-weight:950;margin-bottom:5px}
+.text{font-size:13px;line-height:1.52;color:#f8fafc}
+.option{
+  border:1px solid #475569;border-radius:12px;padding:9px;margin-top:9px;
+  background:rgba(30,41,59,.86);font-size:12px;line-height:1.42;color:#dbeafe;
+}
+.option b{color:#fff}
+.btn{
+  border:1px solid #475569;border-radius:12px;background:#1e293b;color:var(--text);
+  font-weight:900;padding:10px 12px;cursor:pointer;transition:.12s;min-height:42px;
+}
+.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn:active{transform:translateY(1px)}
+.btn.green{background:linear-gradient(135deg,#166534,#15803d);border-color:#22c55e}
+.btn.red{background:linear-gradient(135deg,#7f1d1d,#991b1b);border-color:#fb7185}
+.btn.cyan{background:linear-gradient(135deg,#075985,#0e7490);border-color:#25d7ff}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.note{font-size:12px;line-height:1.42;color:#cbd5e1}
+.mapPanel{position:relative}
+.boardShell{
+  position:relative;flex:1;min-height:0;margin:12px;border-radius:18px;overflow:hidden;
+  border:1px solid #334155;background:radial-gradient(circle at center,#111827,#080d17 75%);
+  box-shadow:inset 0 0 80px rgba(37,215,255,.05);
+}
+.boardShell:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;
+  background-image:
+    linear-gradient(rgba(148,163,184,.25) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.25) 1px,transparent 1px);
+  background-size:38px 38px;
+}
+#board{width:100%;height:100%;min-height:600px;display:block;position:relative;z-index:1}
+.hexBase{stroke:#64748b;stroke-width:1.8;cursor:pointer;fill:#111b2d;filter:drop-shadow(0 3px 1px rgba(0,0,0,.3));transition:.12s}
+.hexBase:hover{fill:#1d2a44;stroke:#25d7ff;filter:drop-shadow(0 0 11px rgba(37,215,255,.55))}
+.hexBuilt{stroke:#dbeafe;stroke-width:2.4;cursor:pointer;filter:drop-shadow(0 4px 3px rgba(0,0,0,.55));transition:.12s}
+.hexBuilt:hover{filter:drop-shadow(0 0 12px rgba(37,215,255,.7))}
+.selected{stroke:#facc15!important;stroke-width:5!important;filter:drop-shadow(0 0 14px rgba(250,204,21,.75))!important}
+.supportIcon{font-size:23px;text-anchor:middle;dominant-baseline:central;pointer-events:none;opacity:.82}
+.builtIcon{font-size:25px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.builtLabel{font-size:9px;font-weight:950;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#f8fafc;paint-order:stroke;stroke:#020617;stroke-width:3px}
+.bomb text{font-size:25px;text-anchor:middle;dominant-baseline:central}
+.bomb circle{fill:#7f1d1d;stroke:#fecaca;stroke-width:2;animation:pulse 1s infinite}
+.bombTimer{font-size:10px;font-weight:950;text-anchor:middle;dominant-baseline:central;fill:#fff;paint-order:stroke;stroke:#7f1d1d;stroke-width:3px}
+@keyframes pulse{50%{r:18;filter:drop-shadow(0 0 14px #fb7185)}}
+.startOverlay{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;
+  width:min(620px,88%);background:rgba(15,23,42,.86);backdrop-filter:blur(10px);
+  border:1px solid rgba(37,215,255,.55);border-radius:18px;padding:26px;
+  box-shadow:0 0 40px rgba(37,215,255,.22), inset 0 0 42px rgba(37,215,255,.08);
+}
+.startOverlay h2{font-size:34px;line-height:1.05;margin:0 0 14px;text-transform:uppercase}
+.startOverlay p{font-size:15px;line-height:1.55;color:#dbeafe}
+.quote{border:1px solid rgba(37,215,255,.65);color:#a5f3fc;border-radius:12px;padding:12px;font-weight:950;text-transform:uppercase;letter-spacing:.5px;box-shadow:0 0 18px rgba(37,215,255,.18)}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{display:block;font-size:11px;color:var(--muted);font-weight:900;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+select{
+  width:100%;border:1px solid #475569;border-radius:10px;background:#0b1220;color:var(--text);
+  padding:10px;font-weight:800;
+}
+.card{background:#0b1220;border:1px solid #334155;border-radius:14px;padding:10px}
+.tileList{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{
+  border:1px solid #475569;border-radius:13px;background:#111827;color:#dbeafe;
+  padding:8px;cursor:pointer;font-weight:850;font-size:13px;
+}
+.tile.active{background:#075985;border-color:#25d7ff;box-shadow:0 0 14px rgba(37,215,255,.16)}
+.indicator{margin:8px 0;padding:8px;border:1px solid #334155;border-radius:12px;background:#0b1220}
+.indHeader{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:12px;font-weight:950;margin-bottom:5px}
+.bar{height:12px;background:#1e293b;border:1px solid #475569;border-radius:999px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green))}
+.fill.reverse{background:linear-gradient(90deg,var(--green),var(--yellow),var(--red))}
+.help{font-size:11px;color:#cbd5e1;margin-top:5px;line-height:1.32}
+.danger{border-color:#fb7185;background:#35111a}.danger .help{color:#fecdd3}
+.warn{border-color:#facc15}
+.popBox{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center}
+.pie{width:70px;height:70px;border-radius:50%;border:2px solid #475569;background:conic-gradient(#38bdf8 0 50%,#22c55e 50% 100%);box-shadow:inset 0 0 0 12px #0f172a}
+.log,.narrative{height:116px;overflow:auto;background:#0b1220;border:1px solid #334155;border-radius:14px;padding:9px;font-size:12px;color:#cbd5e1}
+.log div,.narrative div{padding:6px 0;border-bottom:1px solid #1e293b}
+.nickname{font-size:15px;color:#facc15;font-weight:950;margin-bottom:7px}
+.overlay{display:none;position:fixed;inset:0;background:#000d;z-index:50;padding:18px;overflow:auto}
+.endbox{max-width:920px;margin:30px auto;background:#111b2d;border:1px solid #475569;border-radius:20px;padding:24px;color:#e2e8f0;box-shadow:0 0 50px rgba(0,0,0,.55)}
+@media(max-width:1200px){
+  html,body{overflow:auto}
+  .app{height:auto}
+  .main{grid-template-columns:1fr}
+  .boardShell{height:620px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="seal"></div>
+      <div class="title">
+        <h1>Plan, Maestro</h1>
+        <div class="by">Simulador de Decisiones Territoriales · por Rodolfo Morgani</div>
+      </div>
+    </div>
+    <div class="hudPills">
+      <span class="pill">Turno <b id="turn">1</b>/8</span>
+      <span class="pill">Fichas <b id="actions">5</b></span>
+      <span class="pill">Modificador <b id="modPrev">0</b></span>
+      <span class="pill">Bombas <b id="bombsActive">0</b></span>
+      <span class="pill">Explosiones <b id="booms">0</b></span>
+    </div>
+  </header>
+
+  <section class="main">
+    <aside class="panel">
+      <div class="panelHeader">Carta de crisis</div>
+      <div class="panelBody">
+        <div id="crisisBox" class="crisisCard"></div>
+        <div class="actions">
+          <button class="btn green" id="choiceA"></button>
+          <button class="btn red" id="choiceB"></button>
+        </div>
+        <div class="card note" style="margin-top:10px">
+          La crisis sólo puede resolverse una vez por turno. Si elegís una opción con +Construcción, esas fichas se suman al próximo turno.
+        </div>
+      </div>
+    </aside>
+
+    <main class="panel mapPanel">
+      <div class="panelHeader cyan">Tablero 8×8 · soporte físico y expansión territorial</div>
+      <div class="boardShell">
+        <svg id="board" viewBox="0 0 850 680"><g id="boardGroup"></g></svg>
+        <div id="startOverlay" class="startOverlay">
+          <h2>Ahora: planificar es jugar<br>(y equivocarse)</h2>
+          <p>Construí ciudad tomando decisiones de clasificación y zonificación sobre un tablero hexagonal. Cada ficha implica tensiones reales: mercado vs. comunidad, crecimiento vs. sustentabilidad, valor de cambio vs. valor de uso.</p>
+          <div class="quote">No hay decisiones sin consecuencias.</div>
+          <div style="margin-top:16px;text-align:right"><button class="btn cyan" id="startBtn">👉 Iniciar simulación</button></div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="panel">
+      <div class="panelHeader cyan">Panel de planificación</div>
+      <div class="panelBody">
+        <div class="card note">
+          <b>Regla:</b> empezás con 5 fichas. Luego, base 0: urbano +1, industrial +1, productivo +1; ambiental/comunitario/espacio público/rural no productivo -1.
+        </div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">Ficha territorial</div>
+        <div class="tileList" id="tileList"></div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">Clasificación + zonificación</div>
+        <div class="formGrid">
+          <div><label>Clasificación</label><select id="cls"></select></div>
+          <div><label>Zonificación</label><select id="zon"></select></div>
+          <div><label>Subzona</label><select id="sub"></select></div>
+          <div><label>Impacto</label><div class="card note" id="preview"></div></div>
+        </div>
+        <div class="actions">
+          <button class="btn green" id="place">Colocar ficha</button>
+          <button class="btn" id="inspect">Inspeccionar</button>
+        </div>
+        <div class="card note" id="info" style="margin-top:9px">Seleccioná un hexágono vacío.</div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">Indicadores de derrota</div>
+        <div class="card note"><b>Rojo = perder.</b> En variables positivas perdés si llegan a 0; en negativas si llegan a 100. Población: perdés si urbana o rural supera 85%.</div>
+        <div id="indicators"></div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">Población urbana/rural</div>
+        <div class="card popBox"><div class="pie" id="popPie"></div><div class="note" id="popText"></div></div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">La ciudad habla</div>
+        <div class="card">
+          <div class="nickname" id="nickname">Apodo: El Planificador en Blanco</div>
+          <div class="narrative" id="narrative"></div>
+        </div>
+
+        <div class="panelHeader cyan" style="margin:12px -12px 10px">Registro</div>
+        <div class="log" id="log"></div>
+        <div class="actions">
+          <button class="btn cyan" id="next">Cerrar turno</button>
+          <button class="btn" id="finish">Cerrar partida</button>
+        </div>
+      </div>
+    </aside>
+  </section>
+</div>
+
+<div class="overlay" id="end">
+  <div class="endbox">
+    <h2 id="endTitle"></h2>
+    <h2 id="score"></h2>
+    <div id="badges"></div>
+    <h3>Diagnóstico</h3><p id="diag"></p>
+    <h3>Lectura narrativa</h3><p id="storyEnd"></p>
+    <button class="btn green" onclick="location.reload()">Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+const terrain={mountain:{name:'Montaña',icon:'⛰️'},piedemonte:{name:'Piedemonte',icon:'🌄'},oasis:{name:'Oasis',icon:'🍇'},desert:{name:'Desierto',icon:'🏜️'},plain:{name:'Llanura',icon:'🌾'}};
+const classes={urban:{name:'Urbana',icon:'🏙️',allowed:['functional','form','intensity','incentive','special']},interface:{name:'Interfase',icon:'🚪',allowed:['functional','form','intensity','incentive','special']},irrigated:{name:'Rural irrigada',icon:'🍇',allowed:['form','intensity','incentive','special']},dry:{name:'Rural no irrigada',icon:'🏜️',allowed:['form','intensity','incentive','special']},natural:{name:'Natural',icon:'🌳',allowed:['form','intensity','special']},special:{name:'Especial',icon:'📐',allowed:['special','incentive','form']}};
+const zonings={functional:{name:'Funcional',subs:{res:{name:'Residencial',icon:'🏘️',kind:'urban'},com:{name:'Comercial',icon:'🛍️',kind:'urban'},ind:{name:'Industrial',icon:'🏭',kind:'industrial'},mix:{name:'Mixtura',icon:'🏙️',kind:'urban'},green:{name:'Espacio verde',icon:'🌳',kind:'natural'}}},form:{name:'Basada en formas',subs:{center:{name:'Centralidad',icon:'🏛️',kind:'urban'},corridor:{name:'Corredor',icon:'🚋',kind:'urban'},landscape:{name:'Paisaje rural',icon:'🍃',kind:'rural'},heritage:{name:'Histórico',icon:'🏚️',kind:'community'}}},intensity:{name:'De intensidad',subs:{high:{name:'Alta densidad',icon:'🏢',kind:'urban'},medium:{name:'Media densidad',icon:'🏠',kind:'urban'},low:{name:'Baja densidad',icon:'🏡',kind:'community'},nodev:{name:'Sin desarrollo',icon:'⛔',kind:'natural'}}},incentive:{name:'De incentivos',subs:{build:{name:'Construcción',icon:'🏗️',kind:'urban'},solar:{name:'Paneles solares',icon:'☀️',kind:'natural'},housing:{name:'Vivienda accesible',icon:'🔑',kind:'community'},transport:{name:'Transporte público',icon:'🚌',kind:'community'},public:{name:'Espacio público',icon:'🟩',kind:'community'}}},special:{name:'Especial',subs:{social:{name:'Interés social',icon:'👥',kind:'community'},env:{name:'Preservación ambiental',icon:'🛡️',kind:'natural'},risk:{name:'Reserva por riesgo',icon:'⚠️',kind:'natural'},log:{name:'Logística controlada',icon:'🚚',kind:'industrial'}}}};
+const tilePresets=[{id:'compact',name:'Urbano compacto',cls:'urban',zon:'intensity',sub:'high'},{id:'mixed',name:'Barrio mixto',cls:'urban',zon:'functional',sub:'mix'},{id:'industrial',name:'Industrial',cls:'urban',zon:'functional',sub:'ind'},{id:'interface',name:'Interfase gradual',cls:'interface',zon:'form',sub:'corridor'},{id:'rural',name:'Rural productivo',cls:'irrigated',zon:'form',sub:'landscape'},{id:'natural',name:'Reserva natural',cls:'natural',zon:'special',sub:'env'},{id:'public',name:'Comunitario',cls:'special',zon:'incentive',sub:'public'}];
+
+let grid=[],selected=null,preset='compact',turnN=1,actionsN=5,bombs=[],detonations=0,gameOver=false,started=false;
+let builtThisTurn={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0},prev={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0};
+let styleScore={market:0,green:0,popular:0,technic:0,chaos:0};
+let state={build:0,sustain:50,value:50,water:50,risk:20,conflict:20,compact:45,equity:50,popUrban:50,popRural:50};
+const events=[
+{t:'Crisis hídrica',x:'La expansión presiona oasis, piedemonte o áreas sensibles.',ex:'En Mendoza, el agua no es una variable secundaria: define hasta dónde puede crecer la ciudad. Restringir áreas sensibles mejora agua y sustentabilidad, pero baja la velocidad constructiva. Acelerar loteos aumenta construcción inmediata, pero convierte soporte ambiental en conflicto futuro.',a:'Restringir áreas sensibles',b:'Acelerar loteos',A:{water:7,sustain:5,conflict:-3,build:-1},B:{build:4,sustain:-7,water:-6,conflict:6,risk:3}},
+{t:'Demanda de vivienda',x:'La valorización del suelo empuja a sectores medios y populares hacia áreas peor servidas.',ex:'Cuando domina el valor de cambio, la ciudad puede crecer en precio y perder valor de uso. La vivienda accesible mejora equidad y reduce conflicto. Esperar inversión privada aumenta valor y construcción, pero puede producir expulsión y desigualdad territorial.',a:'Vivienda accesible',b:'Esperar inversión privada',A:{equity:9,sustain:2,value:-2,conflict:-4},B:{build:3,value:6,equity:-7,conflict:5}},
+{t:'Movilidad saturada',x:'La ciudad difusa aumenta viajes, costos de infraestructura y dependencia del auto.',ex:'Una ciudad extendida consume más redes, tiempo y energía. Corredores y densidad media mejoran compacidad y sustentabilidad. La periferia de baja intensidad parece barata al inicio, pero encarece servicios y deteriora vida cotidiana.',a:'Corredores y densidad media',b:'Más periferia',A:{build:1,sustain:3,compact:6,conflict:-1},B:{build:3,sustain:-4,compact:-7,conflict:4}},
+{t:'Presión desarrolladora',x:'El capital pide liberar restricciones en zonas de alta renta o soportes frágiles.',ex:'La inversión puede financiar crecimiento, pero sin reglas tiende a capturar la norma. Condicionar permisos protege capacidad técnica y reduce riesgo. Liberar iniciativa aumenta valor y construcción, pero también riesgo, conflicto y dependencia del mercado.',a:'Condicionar permisos',b:'Liberar iniciativa',A:{risk:-4,conflict:-3,sustain:3,value:-1},B:{build:4,value:6,risk:7,conflict:6}},
+{t:'Conflicto de borde',x:'Las fichas colocadas generan incompatibilidades entre usos vecinos.',ex:'No alcanza con que una ficha sea válida en sí misma: también importa con qué limita. Industria junto a vivienda, urbanización contra oasis o densidad sobre piedemonte producen bombas territoriales. Crear amortiguadores baja conflicto; ignorarlos acelera crecimiento y acumula explosiones futuras.',a:'Crear amortiguadores',b:'Ignorar bordes',A:{conflict:-5,sustain:4,risk:-3,build:-1},B:{build:3,conflict:7,risk:5}},
+{t:'Legitimidad técnica',x:'Las excepciones acumuladas hacen que los actores cuestionen las reglas del juego.',ex:'Una ciudad no se ordena sólo con plano, sino con reglas creíbles. Revisar criterios mejora legitimidad y baja conflicto, aunque reduce velocidad de construcción. Autorizar excepciones sostiene dinámica económica de corto plazo, pero convierte la planificación en negociación caso por caso.',a:'Revisar criterios',b:'Autorizar excepciones',A:{conflict:-4,sustain:3,build:-1,equity:2},B:{build:4,value:5,conflict:6,risk:4}}
+];
+let current=events[0],crisisUsed=false;
+
+function makeGrid(){const rows=8,cols=8,size=38,w=size*2,h=Math.sqrt(3)*size,ox=105,oy=78;for(let r=0;r<rows;r++)for(let q=0;q<cols;q++){let x=ox+q*w*.75,y=oy+r*h+(q%2)*h/2,t='plain';if(q<1&&r<4)t='mountain';else if(q<3)t='piedemonte';else if(q>5&&r>5)t='desert';else if(r>5&&q<6)t='oasis';grid.push({q,r,x,y,t,built:false,cls:null,zon:null,sub:null})}}
+function hexPath(x,y,s=38){let pts=[];for(let i=0;i<6;i++){let a=Math.PI/180*(60*i);pts.push([x+s*Math.cos(a),y+s*Math.sin(a)].join(','))}return pts.join(' ')}
+function tileColor(h){let s=h.sub;if(['ind','log','build','high'].includes(s))return'#b8443c';if(['green','landscape','nodev','env','solar','risk'].includes(s))return'#22c55e';if(['housing','social','public','low'].includes(s))return'#8b5cf6';if(['transport','corridor','medium'].includes(s))return'#0ea5e9';if(['com','center'].includes(s))return'#eab308';return'#f97316'}
+function renderBoard(){boardGroup.innerHTML="";grid.forEach(h=>{let p=document.createElementNS('http://www.w3.org/2000/svg','polygon');p.setAttribute('points',hexPath(h.x,h.y));p.setAttribute('fill',h.built?tileColor(h):'#111b2d');p.setAttribute('class',h.built?'hexBuilt':'hexBase');if(h===selected)p.classList.add('selected');p.onclick=()=>selectHex(h);boardGroup.appendChild(p);let icon=document.createElementNS('http://www.w3.org/2000/svg','text');icon.setAttribute('x',h.x);icon.setAttribute('y',h.built?h.y-5:h.y);icon.setAttribute('class',h.built?'builtIcon':'supportIcon');icon.textContent=h.built?zonings[h.zon].subs[h.sub].icon:terrain[h.t].icon;boardGroup.appendChild(icon);if(h.built){let tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',h.x);tx.setAttribute('y',h.y+24);tx.setAttribute('class','builtLabel');tx.textContent=classes[h.cls].name;board.appendChild(tx)}});
+// centrar tablero
+let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+grid.forEach(h=>{
+ minX=Math.min(minX,h.x);maxX=Math.max(maxX,h.x);
+ minY=Math.min(minY,h.y);maxY=Math.max(maxY,h.y);
+});
+let width=maxX-minX,height=maxY-minY;
+let offsetX=(850-width)/2-minX;
+let offsetY=(680-height)/2-minY;
+boardGroup.setAttribute("transform",`translate(${offsetX},${offsetY})`);
+
+bombs.forEach(b=>{let h=grid.find(x=>x.q===b.q&&x.r===b.r);if(!h)return;let g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','bomb');let c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',h.x+23);c.setAttribute('cy',h.y-23);c.setAttribute('r',15);g.appendChild(c);let t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',h.x+23);t.setAttribute('y',h.y-22);t.textContent='💣';g.appendChild(t);let tt=document.createElementNS('http://www.w3.org/2000/svg','text');tt.setAttribute('x',h.x+23);tt.setAttribute('y',h.y+2);tt.setAttribute('class','bombTimer');tt.textContent=b.timer;g.appendChild(tt);boardGroup.appendChild(g)})}
+function selectHex(h){selected=h;info.innerHTML=`Soporte físico: <b>${terrain[h.t].icon} ${terrain[h.t].name}</b><br>${h.built?'Ficha: '+classes[h.cls].name+' / '+zonings[h.zon].subs[h.sub].name:'Vacío. Puede recibir una ficha.'}`;render()}
+function renderSelectors(){cls.innerHTML='';Object.entries(classes).forEach(([k,v])=>cls.innerHTML+=`<option value="${k}">${v.name}</option>`);cls.value=tilePresets.find(t=>t.id===preset).cls;fillZon()}
+function fillZon(){zon.innerHTML='';classes[cls.value].allowed.forEach(k=>zon.innerHTML+=`<option value="${k}">${zonings[k].name}</option>`);let pr=tilePresets.find(t=>t.id===preset);if(classes[cls.value].allowed.includes(pr.zon))zon.value=pr.zon;fillSub()}
+function fillSub(){sub.innerHTML='';Object.entries(zonings[zon.value].subs).forEach(([k,v])=>{if(validSub(cls.value,k))sub.innerHTML+=`<option value="${k}">${v.name}</option>`});let pr=tilePresets.find(t=>t.id===preset);if([...sub.options].some(o=>o.value===pr.sub))sub.value=pr.sub;preview()}
+function validSub(c,s){if(c==='natural')return['nodev','env','risk','landscape'].includes(s);if(c==='irrigated')return['landscape','nodev','solar','public','env','risk','low'].includes(s);if(c==='dry')return['landscape','nodev','solar','risk','log','low'].includes(s);if(c==='interface')return!['high','ind'].includes(s);return true}
+function calc(h,c,z,s){let kind=zonings[z].subs[s].kind;let d={build:0,sustain:0,value:0,water:0,risk:0,conflict:0,compact:0,equity:0,popUrban:0,popRural:0};if(kind==='urban')Object.assign(d,{build:3,sustain:-2,value:3,compact:2,popUrban:4,popRural:-4});if(kind==='industrial')Object.assign(d,{build:5,sustain:-5,value:4,risk:2,conflict:3,popUrban:2,popRural:-2});if(kind==='rural')Object.assign(d,{build:-1,sustain:5,water:2,value:-1,popUrban:-3,popRural:3});if(kind==='natural')Object.assign(d,{build:-2,sustain:6,water:3,value:-2,popUrban:-1,popRural:1});if(kind==='community')Object.assign(d,{build:0,sustain:3,equity:4,conflict:-1,popUrban:1,popRural:-1});let bomb=false,reason='';if(h.t==='oasis'&&(kind==='urban'||kind==='industrial'||c==='urban')){bomb=true;reason='uso urbano/industrial incompatible con oasis';d.water-=10;d.sustain-=8;d.conflict+=7}if(h.t==='plain'&&(c==='irrigated'||kind==='rural')){bomb=true;reason='llanura apta para urbano/industrial, no rural productivo';d.value-=2;d.conflict+=4}if((h.t==='piedemonte'||h.t==='mountain')&&(kind==='urban'||kind==='industrial'||c==='urban')){bomb=true;reason='urbanización incompatible con piedemonte/montaña';d.risk+=10;d.sustain-=8;d.conflict+=7}if(h.t==='desert'&&!(kind==='natural'||s==='env'||s==='risk'||s==='heritage')){bomb=true;reason='desierto sólo apto para preservación, riesgo o turismo liviano';d.risk+=5;d.sustain-=5;d.conflict+=5}return{d,bomb,reason,kind}}
+function preview(){let h=selected||{t:'plain'};let out=calc(h,cls.value,zon.value,sub.value);document.getElementById('preview').innerHTML=`${classes[cls.value].icon} ${classes[cls.value].name} + ${zonings[zon.value].subs[sub.value].icon} ${zonings[zon.value].subs[sub.value].name}<br>Construcción ${fmt(out.d.build)} · Sustentabilidad ${fmt(out.d.sustain)}<br>${out.bomb?'💣 '+out.reason:'Compatible con soporte seleccionado'}`}
+function fmt(v){return(v>=0?'+':'')+v}
+function applyState(d){Object.entries(d).forEach(([k,v])=>state[k]=Math.max(0,Math.min(100,(state[k]||0)+v)));let total=state.popUrban+state.popRural;if(total>0){state.popUrban=Math.max(0,Math.min(100,state.popUrban/total*100));state.popRural=100-state.popUrban}}
+function growthCategory(c,kind,s){if(kind==='industrial')return'industrial';if(c==='urban'||kind==='urban')return'urban';if(c==='irrigated'||kind==='rural'||s==='landscape')return'productive';if(kind==='natural'||kind==='community'||['green','nodev','env','risk','solar','public','housing','social','transport'].includes(s))return'restrictive';return'none'}
+function placeTile(){if(!started){citizenComment('🖱️ Sistema: “Primero iniciá la simulación. El territorio no se ordena por ansiedad.”');return}if(!selected||selected.built||actionsN<=0){info.textContent='Elegí un hexágono vacío y verificá que tengas fichas disponibles.';return}let c=cls.value,z=zon.value,s=sub.value,out=calc(selected,c,z,s);Object.assign(selected,{built:true,cls:c,zon:z,sub:s});actionsN--;applyState(out.d);if(out.bomb)addBomb(selected,out.reason);let g=growthCategory(c,out.kind,s);if(g==='urban')builtThisTurn.urban++;if(g==='industrial')builtThisTurn.industrial++;if(g==='productive')builtThisTurn.productive++;if(g==='restrictive')builtThisTurn.restrictive++;story(`Colocaste ${classes[c].name} + ${zonings[z].subs[s].name} sobre ${terrain[selected.t].name}. ${out.bomb?'💣 '+out.reason:'Jugada compatible.'}`);citizenComment(commentForMove(c,out.kind,s,out.bomb));if(checkDefeat())return;render()}
+function addBomb(h,reason){if(!bombs.some(b=>b.q===h.q&&b.r===h.r)){bombs.push({q:h.q,r:h.r,reason,timer:3});applyState({conflict:5,sustain:-3,risk:3});story('💣 Bomba creada: '+reason+'. Explotará en 3 turnos.');citizenComment('💣 Periodista local: “Fuentes municipales aseguran que la bomba es sólo una oportunidad de mejora con mecha.”')}}
+function tickBombs(){
+// centrar tablero
+let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+grid.forEach(h=>{
+ minX=Math.min(minX,h.x);maxX=Math.max(maxX,h.x);
+ minY=Math.min(minY,h.y);maxY=Math.max(maxY,h.y);
+});
+let width=maxX-minX,height=maxY-minY;
+let offsetX=(850-width)/2-minX;
+let offsetY=(680-height)/2-minY;
+boardGroup.setAttribute("transform",`translate(${offsetX},${offsetY})`);
+
+bombs.forEach(b=>b.timer--);let exp=bombs.filter(b=>b.timer<=0);bombs=bombs.filter(b=>b.timer>0);exp.forEach(b=>{detonations++;applyState({conflict:14,sustain:-10,water:-5,risk:8,equity:-4});story('💥 Explotó una bomba territorial: '+b.reason);citizenComment('💥 Vecino: “Nos dijeron que era planificación estratégica, pero hizo ruido de garrafa.”')})}
+function impactText(obj){const names={build:'Construcción',sustain:'Sustentabilidad',value:'Valor de cambio',water:'Agua/oasis',risk:'Riesgo',conflict:'Conflicto',compact:'Compacidad',equity:'Valor de uso/equidad'};return Object.entries(obj).map(([k,v])=>`${names[k]||k} ${v>0?'+':''}${v}`).join(' · ')}
+function renderCrisis(){crisisBox.innerHTML=`<div class="crisisIcon">⚠</div><div class="crisisTitle">${current.t}</div><div class="block"><span class="label">Situación</span><div class="text">${current.x}</div></div><div class="block"><span class="label">Qué significa</span><div class="text">${current.ex}</div></div><div class="option"><b>Opción A:</b> ${current.a}<br>${impactText(current.A)}</div><div class="option"><b>Opción B:</b> ${current.b}<br>${impactText(current.B)}</div>`;choiceA.textContent=current.a;choiceB.textContent=current.b}
+function registerCrisisConstruction(choice){let gain=Math.max(0,choice.build||0);if(gain>0){builtThisTurn.crisisBuild+=gain;story('🏗️ La crisis aporta +'+gain+' fichas de construcción al próximo turno.');citizenComment('🏗️ Desarrollador sonriente: “La crisis fue dura, pero dejó una hermosa capacidad constructiva.”')}}
+function renderIndicators(){const defs=[['sustain','Sustentabilidad','positive','Perdés si llega a 0: colapso ambiental.'],['water','Agua/oasis','positive','Perdés si llega a 0: colapso hídrico.'],['equity','Valor de uso / equidad','positive','Perdés si llega a 0: ciudad inhabitable socialmente.'],['value','Valor de cambio','positive','Perdés si llega a 0: ciudad sin dinámica económica.'],['conflict','Conflicto','negative','Perdés si llega a 100: ingobernabilidad total.'],['risk','Riesgo territorial','negative','Subir alimenta bombas y crisis.'],['compact','Compacidad','positive','Muy baja compacidad encarece redes y movilidad.'],['build','Construcción','positive','Da expansión, pero puede destruir sustentabilidad.']];indicators.innerHTML='';defs.forEach(([k,n,type,help])=>{let v=Math.round(state[k]);let danger=(type==='positive'&&v<=15)||(type==='negative'&&v>=85);let warn=(type==='positive'&&v<=30)||(type==='negative'&&v>=70);indicators.innerHTML+=`<div class="indicator ${danger?'danger':warn?'warn':''}"><div class="indHeader"><span>${n}</span><span>${v}</span></div><div class="bar"><div class="fill ${type==='negative'?'reverse':''}" style="width:${v}%"></div></div><div class="help">${help}</div></div>`})}
+function renderPopulation(){let u=Math.round(state.popUrban),r=Math.round(state.popRural);popPie.style.background=`conic-gradient(#38bdf8 0 ${u}%,#22c55e ${u}% 100%)`;popText.innerHTML=`<b>Urbana:</b> ${u}%<br><b>Rural:</b> ${r}%<br>${u>85||r>85?'<span style="color:#fb7185;font-weight:900">Derrota si una proporción supera 85%.</span>':'Equilibrio poblacional tolerable.'}`}
+function render(){renderBoard();turn.textContent=turnN;actions.textContent=actionsN;modPrev.textContent=prev.urban+prev.industrial+prev.productive+prev.crisisBuild-prev.restrictive;bombsActive.textContent=bombs.length;booms.textContent=detonations;renderCrisis();renderIndicators();renderPopulation();preview()}
+function nextTurn(){if(!started)return;if(gameOver)return;tickBombs();if(checkDefeat())return;turnN++;if(turnN>8){finishGame();return}prev={...builtThisTurn};actionsN=Math.max(0,Math.min(10,prev.urban+prev.industrial+prev.productive+prev.crisisBuild-prev.restrictive));builtThisTurn={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0};crisisUsed=false;current=events[(turnN-1)%events.length];story(`Turno ${turnN}: recibís ${actionsN} fichas. Base 0: urbano +${prev.urban}, industrial +${prev.industrial}, productivo +${prev.productive}, crisis +${prev.crisisBuild}, ambiental/comunitario -${prev.restrictive}.`);if(actionsN===0)citizenComment('🪑 Concejal confundido: “Planificaste tan sustentable que ahora no hay presupuesto ni para mover una silla.”');render()}
+function crisis(choice,label){if(!started)return;if(crisisUsed){story('La crisis de este turno ya fue resuelta. No puede repetirse.');return}crisisUsed=true;applyState(choice);registerCrisisConstruction(choice);story('Crisis resuelta: '+label);citizenComment(commentForCrisis(label));if(checkDefeat())return;render()}
+function checkDefeat(){let reason='';if(state.conflict>=100)reason='Derrota por conflicto total: la ciudad se volvió ingobernable.';else if(state.sustain<=0)reason='Derrota por colapso ambiental: la ciudad consumió su soporte territorial.';else if(state.equity<=0)reason='Derrota por colapso del valor de uso: la ciudad ya no puede ser habitada socialmente.';else if(state.value<=0)reason='Derrota por colapso del valor de cambio: la ciudad perdió dinámica económica.';else if(state.water<=0)reason='Derrota por colapso hídrico: el oasis dejó de sostener la urbanización.';else if(detonations>=5)reason='Derrota por cadena de explosiones territoriales.';else if(state.popUrban>85)reason='Derrota por hiperurbanización: más del 85% de la población quedó urbana.';else if(state.popRural>85)reason='Derrota por bloqueo urbano: más del 85% de la población quedó rural.';if(reason){gameOver=true;endTitle.textContent='Derrota anticipada';score.textContent='La partida termina en el turno '+turnN;badges.innerHTML=`<span class="pill">Conflicto ${Math.round(state.conflict)}</span> <span class="pill">Sustentabilidad ${Math.round(state.sustain)}</span> <span class="pill">Agua ${Math.round(state.water)}</span> <span class="pill">Equidad ${Math.round(state.equity)}</span> <span class="pill">Valor ${Math.round(state.value)}</span>`;diag.textContent=reason;storyEnd.textContent='El sistema territorial dejó de ser corregible dentro de la gestión.';end.style.display='block';return true}return false}
+function finishGame(){let scoreVal=Math.round((state.sustain+state.water+state.compact+state.equity+(100-state.risk)+(100-state.conflict))/6-bombs.length*4+state.build*.12);endTitle.textContent=scoreVal>70?'Ciudad equilibrada del oasis':scoreVal>45?'Ciudad en disputa':'Territorio colapsado';score.textContent='Puntaje final: '+scoreVal+'/100';badges.innerHTML=`<span class="pill">Bombas ${bombs.length}</span> <span class="pill">Construcción ${Math.round(state.build)}</span> <span class="pill">Sustentabilidad ${Math.round(state.sustain)}</span> <span class="pill">Urbana ${Math.round(state.popUrban)}%</span> <span class="pill">Rural ${Math.round(state.popRural)}%</span>`;diag.textContent='La partida evalúa si lograste crear ciudad sin forzar soportes físicos incompatibles. Apodo final: '+cityNickname()+'.';storyEnd.textContent=bombs.length>4?'Tu ciudad creció como una mancha ansiosa: mucha decisión, poca lectura territorial.':'El tablero muestra una ciudad más cuidadosa: no perfecta, pero menos ciega al territorio.';end.style.display='block'}
+function cityNickname(){if(bombs.length+detonations>=4||state.conflict>75)return'El Prendefuegos Territorial';if(styleScore.market>=styleScore.green&&styleScore.market>=styleScore.popular&&styleScore.market>2)return'El Emperador del FOT';if(styleScore.green>=styleScore.market&&styleScore.green>=styleScore.popular&&styleScore.green>2)return'El Guardián del Parral';if(styleScore.popular>=styleScore.market&&styleScore.popular>=styleScore.green&&styleScore.popular>2)return'El Santo Patrono del Espacio Público';return'El Planificador en Blanco'}
+function citizenComment(t){let d=document.createElement('div');d.textContent=t;narrative.prepend(d);nickname.textContent='Apodo: '+cityNickname()}
+function commentForMove(c,kind,s,bomb){if(bomb){styleScore.chaos++;return'💣 Vecino: “No sé qué aprobaron, pero ya armé grupo de WhatsApp con sirena.”'}if(kind==='industrial'){styleScore.market++;return'🏭 Desarrollador: “El humo es temporal, la renta es permanente.”'}if(c==='urban'||kind==='urban'){styleScore.market++;return'🏢 Corredor inmobiliario: “Donde había soporte físico, vemos oportunidad.”'}if(kind==='natural'||kind==='rural'){styleScore.green++;return'🍇 Productor: “No será un shopping, pero todavía se puede respirar.”'}if(kind==='community'){styleScore.popular++;return'🚌 Vecina: “Al menos parece pensado para vivir y no sólo para vender.”'}return'📐 Técnico: “No es sexy, pero el plano no da vergüenza.”'}
+function commentForCrisis(a){if(a.includes('Restringir')||a.includes('Condicionar')||a.includes('Revisar')||a.includes('Crear'))return'📐 Equipo técnico: “Milagro: se decidió antes de que explotara todo.”';if(a.includes('Acelerar')||a.includes('Liberar')||a.includes('Autorizar'))return'🏗️ Desarrollador: “Eso es visión de futuro. El futuro casualmente tiene amenities.”';if(a.includes('Vivienda'))return'👥 Inquilino: “No pido utopía, con no vivir a dos colectivos de mi vida alcanza.”';return'☕ Ciudadano random: “La gestión territorial es como el mate: si lo cebás mal, todos se dan cuenta.”'}
+function story(t){let d=document.createElement('div');d.textContent='• '+t;log.prepend(d)}
+tileList.innerHTML=tilePresets.map(t=>`<div class="tile ${t.id===preset?'active':''}" data-id="${t.id}">${classes[t.cls].icon} ${t.name}</div>`).join('');
+document.querySelectorAll('.tile').forEach(el=>el.onclick=()=>{preset=el.dataset.id;document.querySelectorAll('.tile').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderSelectors()});
+cls.onchange=fillZon;zon.onchange=fillSub;sub.onchange=preview;place.onclick=placeTile;next.onclick=nextTurn;finish.onclick=finishGame;choiceA.onclick=()=>crisis(current.A,current.a);choiceB.onclick=()=>crisis(current.B,current.b);inspect.onclick=()=>{if(selected)selectHex(selected)}
+startBtn.onclick=()=>{started=true;startOverlay.style.display='none';story('Simulación iniciada: tablero 8×8 vacío. El territorio empieza a contestar.');citizenComment('🗺️ Voz territorial: “Arranca la gestión. Nadie sabe qué ciudad va a salir, pero todos ya tienen una queja preparada.”')}
+makeGrid();renderSelectors();render();
+</script>
+</body>
+</html>
