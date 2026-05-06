@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Plan, Maestro. v3 — PPOT Mendoza · Ley 8.999</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08100e;
+  --panel:#0c1a16;
+  --panel2:#101f1a;
+  --line:#1a3028;
+  --line2:#254038;
+  --text:#d8ede6;
+  --muted:#5a8a72;
+  --blue:#38bdf8;
+  --green:#4ade80;
+  --yellow:#fbbf24;
+  --red:#f87171;
+  --purple:#a78bfa;
+  --orange:#fb923c;
+  --teal:#2dd4bf;
+  --brown:#d97706;
+  --font-title:'Syne',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body)}
+body{background-image:
+  radial-gradient(ellipse 70% 50% at 10% 0%,#0a2a1a 0%,transparent 60%),
+  radial-gradient(ellipse 50% 40% at 90% 100%,#1a1a08 0%,transparent 50%)}
+
+header{padding:12px 20px;border-bottom:1px solid var(--line);background:rgba(8,16,14,.96);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-title{font-family:var(--font-title);font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.header-title span{color:var(--yellow)}
+.header-sub{font-size:10px;font-family:var(--font-mono);color:var(--muted);margin-top:2px}
+.header-pills{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.hpill{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:4px 10px;font-size:11px;font-family:var(--font-mono);color:var(--muted)}
+.hpill b{color:var(--text)}
+.hpill.warn b{color:var(--yellow)}
+.hpill.danger b{color:var(--red);animation:blink .7s step-end infinite}
+.hpill.bomb b{color:var(--red);animation:blink .7s step-end infinite}
+@keyframes blink{50%{opacity:.2}}
+
+.layout{display:grid;grid-template-columns:296px 1fr 316px;gap:9px;max-width:1600px;margin:9px auto;padding:0 9px 20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.panel-head{padding:9px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px}
+.panel-head h2{font-family:var(--font-title);font-size:12px;font-weight:700;letter-spacing:.6px;color:var(--teal);text-transform:uppercase}
+.inside{padding:10px;display:flex;flex-direction:column;gap:9px}
+
+/* CRISIS */
+.crisis-card{background:linear-gradient(135deg,#0d1e14,#0f1a0a);border:1px solid #254020;border-left:4px solid var(--yellow);border-radius:11px;padding:11px}
+.crisis-title{font-family:var(--font-title);font-size:16px;font-weight:800;color:var(--yellow);margin-bottom:7px}
+.crisis-block{background:rgba(0,0,0,.3);border-radius:7px;padding:8px;margin-bottom:7px}
+.crisis-label{font-size:9px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.crisis-text{font-size:12px;line-height:1.5;color:var(--text)}
+.impact-pills{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.ip{border-radius:4px;padding:2px 6px;font-size:10px;font-family:var(--font-mono);font-weight:700}
+.ip.pos{background:#0a2a14;color:var(--green);border:1px solid #1a4a24}
+.ip.neg{background:#2a0a0a;color:var(--red);border:1px solid #4a1a1a}
+.crisis-opt{background:rgba(0,0,0,.2);border:1px solid var(--line2);border-radius:9px;padding:8px;font-size:11px;line-height:1.45;margin-top:5px}
+.crisis-opt b{color:var(--text);display:block;margin-bottom:3px;font-size:12px}
+
+/* BUTTONS */
+.btn{border:none;border-radius:9px;color:var(--text);font-family:var(--font-body);font-weight:600;font-size:12px;padding:8px 12px;cursor:pointer;transition:.13s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn:hover{filter:brightness(1.18);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn-green{background:linear-gradient(135deg,#14532d,#166534)}
+.btn-red{background:linear-gradient(135deg,#6b1c1c,#7f1d1d)}
+.btn-blue{background:linear-gradient(135deg,#0c4a6e,#075985)}
+.btn-gray{background:var(--panel2);border:1px solid var(--line2)}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+
+/* BOARD */
+.board-wrap{background:#060e0a;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;height:420px}
+.board-grid{position:absolute;inset:0;pointer-events:none;opacity:.06;background-image:linear-gradient(#4ade80 1px,transparent 1px),linear-gradient(90deg,#4ade80 1px,transparent 1px);background-size:40px 40px}
+#board{width:100%;display:block;position:relative;z-index:1}
+.hexBase{stroke:#1a3428;stroke-width:1.5;cursor:pointer;transition:.12s}
+.hexBase:hover{stroke:#2dd4bf;filter:drop-shadow(0 0 7px rgba(45,212,191,.5))}
+.hexBuilt{stroke:#2a4a38;stroke-width:2;cursor:pointer;transition:.12s}
+.hexBuilt:hover{stroke:#38bdf8;filter:drop-shadow(0 0 9px rgba(56,189,248,.4))}
+.selected-hex{stroke:#fbbf24!important;stroke-width:4!important;filter:drop-shadow(0 0 12px rgba(251,191,36,.6))!important}
+.hex-bomb-pulse{animation:hbp 1.2s ease-in-out infinite}
+@keyframes hbp{0%,100%{filter:drop-shadow(0 0 5px rgba(248,113,113,.4))}50%{filter:drop-shadow(0 0 18px rgba(248,113,113,.9))}}
+.hex-icon{font-size:19px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.hex-label{font-size:7.5px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#d0ede0;paint-order:stroke;stroke:#040c08;stroke-width:2.5px;font-family:var(--font-mono)}
+.bomb-bg{fill:#7f1d1d;stroke:#f87171;stroke-width:1.5;animation:bpulse 1s ease-in-out infinite}
+@keyframes bpulse{0%,100%{r:13}50%{r:17;fill:#991b1b}}
+.hex-bomb-icon{font-size:16px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.hex-timer{font-size:9px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:#fff;paint-order:stroke;stroke:#7f1d1d;stroke-width:3px;font-family:var(--font-mono)}
+.warn-preview{stroke:var(--yellow)!important;stroke-width:3!important}
+.danger-preview{stroke:var(--red)!important;stroke-width:3!important}
+
+/* LEGEND TERRAIN */
+.legend{display:flex;flex-wrap:wrap;gap:5px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* CLASSIFICATION BADGE */
+.cls-badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:2px 8px;font-size:10px;font-family:var(--font-mono);font-weight:700;border:1px solid}
+.cls-urbana{background:#0d1e3a;color:#60a5fa;border-color:#1e3a5a}
+.cls-interfaces{background:#1a1a0a;color:#fbbf24;border-color:#3a3a1a}
+.cls-irrigada{background:#0a2a1a;color:#4ade80;border-color:#1a4a2a}
+.cls-noirrigada{background:#1a180a;color:#d97706;border-color:#3a300a}
+.cls-natural{background:#0a1e0a;color:#86efac;border-color:#1a3a1a}
+.cls-especial{background:#1a0a2a;color:#a78bfa;border-color:#3a1a4a}
+
+/* TERRAIN INFO */
+.terrain-info{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-height:52px;font-size:12px;line-height:1.5;color:var(--text)}
+.terrain-info.bomb-w{border-color:var(--red);background:#140808}
+.terrain-info.ok-w{border-color:var(--green);background:#081408}
+
+/* PRESETS — clasificación × zonificación */
+.preset-section{margin-top:2px}
+.preset-sec-label{font-size:9px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;padding-left:2px}
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.preset-btn{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px;cursor:pointer;font-size:11px;font-weight:600;color:#93c5fd;text-align:left;transition:.12s;display:flex;align-items:flex-start;gap:6px;line-height:1.3}
+.preset-btn:hover{border-color:var(--teal);background:#0a1e18}
+.preset-btn.active{border-color:var(--teal);background:#0c2a20;color:#fff}
+.preset-btn .pico{font-size:15px;flex-shrink:0;margin-top:1px}
+.preset-btn .pname{font-weight:700;display:block}
+.preset-btn .pcls{font-size:9px;color:var(--muted);font-family:var(--font-mono)}
+
+/* SELECTORS */
+.selector-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+select{width:100%;border:1px solid var(--line2);border-radius:7px;background:#080e0a;color:var(--text);padding:7px 9px;font-size:11px;font-family:var(--font-body);appearance:none;cursor:pointer;outline:none}
+select:focus{border-color:var(--teal)}
+.select-wrap{position:relative}
+.select-wrap::after{content:'▾';position:absolute;right:9px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:11px}
+label{display:block;font-size:9px;font-family:var(--font-mono);color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+
+/* PREVIEW */
+.preview-box{background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:8px 10px;font-size:11px;line-height:1.5;min-height:50px;transition:.2s}
+.preview-box.bomb{border-color:var(--red);background:#140808}
+.preview-box.ok{border-color:var(--green);background:#081408}
+.preview-title{font-weight:700;color:var(--text);margin-bottom:4px;font-size:12px}
+
+/* INDICATORS */
+.ind-list{display:flex;flex-direction:column;gap:5px}
+.indicator{border:1px solid var(--line);border-radius:9px;padding:7px 9px;background:var(--panel2);transition:.3s}
+.indicator.warn{border-color:#78350f;background:#150c04}
+.indicator.danger{border-color:var(--red);background:#140404;animation:ind-pulse .8s ease-in-out infinite}
+@keyframes ind-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px rgba(248,113,113,.2)}}
+.ind-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.ind-name{font-size:10px;font-weight:600;color:var(--text)}
+.ind-val{font-family:var(--font-mono);font-size:12px;font-weight:700}
+.ind-val.good{color:var(--green)}
+.ind-val.ok{color:var(--yellow)}
+.ind-val.bad{color:var(--red)}
+.bar{height:7px;background:#060e0a;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.fill{height:100%;border-radius:99px;transition:width .4s ease}
+.fill-pos{background:linear-gradient(90deg,var(--red) 0%,var(--yellow) 45%,var(--green) 100%)}
+.fill-neg{background:linear-gradient(90deg,var(--green) 0%,var(--yellow) 55%,var(--red) 100%)}
+.ind-help{font-size:9px;color:var(--muted);margin-top:3px;font-family:var(--font-mono);display:none}
+.indicator:hover .ind-help{display:block}
+
+/* POPULATION */
+.pop-box{display:grid;grid-template-columns:60px 1fr;gap:10px;align-items:center}
+.pie{width:56px;height:56px;border-radius:50%;border:2px solid var(--line2);box-shadow:inset 0 0 0 9px var(--panel2)}
+.pop-text{font-size:11px;color:var(--text);line-height:1.6;font-family:var(--font-mono)}
+.pop-warn{color:var(--red);font-weight:700;font-size:10px}
+
+/* NARRATIVE */
+.narrative-box{background:#040a06;border:1px solid var(--line);border-radius:9px;height:100px;overflow:auto;padding:8px}
+.narrative-box .msg{padding:4px 0;border-bottom:1px solid #0d1e14;font-size:11px;color:#6ee7b7;line-height:1.4}
+.log-box{background:#040a06;border:1px solid var(--line);border-radius:9px;height:90px;overflow:auto;padding:8px}
+.log-box .entry{padding:3px 0;border-bottom:1px solid #0a1810;font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+.nickname{font-family:var(--font-title);font-size:13px;color:var(--yellow);font-weight:800;margin-bottom:5px}
+
+/* DIVIDER & SECTION */
+.divider{border:none;border-top:1px solid var(--line);margin:1px 0}
+.sec{font-family:var(--font-mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:1px 0}
+
+/* NOTE BOX */
+.note-box{background:#050e08;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:10px;line-height:1.5;color:var(--muted)}
+.note-box b{color:var(--text)}
+
+/* FICHA COUNT */
+.ficha-count{display:flex;align-items:center;gap:9px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:9px 13px}
+.ficha-num{font-family:var(--font-title);font-size:30px;font-weight:800;color:var(--teal)}
+.ficha-label{font-size:9px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.ficha-detail{font-size:10px;color:var(--text);margin-top:2px}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;padding:20px;overflow:auto;backdrop-filter:blur(4px)}
+.endbox{max-width:660px;margin:40px auto;background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:26px}
+.end-title{font-family:var(--font-title);font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:5px}
+.end-score{font-family:var(--font-mono);font-size:20px;color:var(--teal);margin-bottom:14px}
+.end-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.end-pill{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:4px 10px;font-family:var(--font-mono);font-size:11px;color:var(--text)}
+.end-diag{font-size:13px;line-height:1.6;color:var(--text);margin-bottom:9px}
+.end-story{font-size:12px;line-height:1.6;color:var(--muted);font-style:italic}
+
+/* CRISIS RESOLVED */
+.crisis-resolved{opacity:.45;pointer-events:none}
+.crisis-resolved-badge{background:#082a12;border:1px solid #1a4a24;border-radius:7px;padding:5px 9px;font-size:10px;font-family:var(--font-mono);color:var(--green);text-align:center}
+
+/* NOTE PPOT */
+.ppot-note{background:#080e18;border:1px solid #1a2a4a;border-radius:8px;padding:7px 9px;font-size:10px;line-height:1.5;color:#60a5fa}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:#040a06}
+::-webkit-scrollbar-thumb{background:#1a3a28;border-radius:99px}
+
+@media(max-width:1200px){.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-title">Plan, <span>Maestro.</span></div>
+    <div class="header-sub">Cátedra de Geografía Urbana · PPOT Mendoza · Ley 8.051/2009 y Ley 8.999/2017</div>
+  </div>
+  <div class="header-pills" id="headerPills">
+    <div class="hpill">Turno <b id="hTurn">1</b>/8</div>
+    <div class="hpill" id="hFichasPill">Fichas <b id="hFichas">5</b></div>
+    <div class="hpill" id="hBombsPill">💣 <b id="hBombs">0</b></div>
+    <div class="hpill" id="hBoomsPill">💥 <b id="hBooms">0</b>/5</div>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- LEFT: CRISIS -->
+<aside class="panel">
+  <div class="panel-head"><h2>🚨 Carta de crisis territorial</h2></div>
+  <div class="inside">
+    <div id="crisisWrap">
+      <div class="crisis-card" id="crisisCard"></div>
+      <div id="crisisOptions"></div>
+    </div>
+    <div id="crisisResolvedBadge" style="display:none" class="crisis-resolved-badge">✓ Crisis resuelta este turno</div>
+    <div class="note-box">La crisis se resuelve <b>una vez por turno</b>. Ignorarla no provoca derrota inmediata, pero acumula tensiones.</div>
+    <hr class="divider">
+    <div class="sec">Narrativa ciudadana</div>
+    <div class="nickname" id="nickname">Apodo: El Planificador en Blanco</div>
+    <div class="narrative-box" id="narrative"></div>
+    <div class="sec">Registro</div>
+    <div class="log-box" id="log"></div>
+  </div>
+</aside>
+
+<!-- CENTER: BOARD -->
+<main class="panel">
+  <div class="panel-head">
+    <h2>🗺️ Tablero — Soporte físico del territorio mendocino</h2>
+    <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
+      <button onclick="zoomBoard(1.2)" style="background:var(--panel2);border:1px solid var(--line2);border-radius:6px;color:var(--text);padding:2px 9px;cursor:pointer;font-size:15px;line-height:1">+</button>
+      <button onclick="zoomBoard(1/1.2)" style="background:var(--panel2);border:1px solid var(--line2);border-radius:6px;color:var(--text);padding:2px 9px;cursor:pointer;font-size:15px;line-height:1">−</button>
+      <button onclick="resetZoom()" style="background:var(--panel2);border:1px solid var(--line2);border-radius:6px;color:var(--muted);padding:3px 8px;cursor:pointer;font-size:10px;font-family:var(--font-mono)">↺</button>
+    </div>
+  </div>
+  <div class="inside">
+    <div class="board-wrap" id="boardWrap" style="overflow:hidden;touch-action:none">
+      <div class="board-grid"></div>
+      <svg id="board" style="display:block;cursor:grab;position:relative;z-index:1"></svg>
+    </div>
+    <div class="legend" id="terrainLegend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2a3a50"></div>⛰️ Montaña</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2e4030"></div>🌄 Piedemonte</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1a4028"></div>🍇 Oasis irrigado</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3a3010"></div>🏜️ Secano</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1e3040"></div>🌾 Llanura apta</div>
+    </div>
+    <div class="terrain-info" id="hexInfo">Hacé clic en un hexágono para ver su soporte físico y planificar la clasificación territorial.</div>
+  </div>
+</main>
+
+<!-- RIGHT: PLANNING -->
+<aside class="panel">
+  <div class="panel-head"><h2>📐 Clasificación + Zonificación</h2></div>
+  <div class="inside">
+
+    <div class="ppot-note">Marco normativo: <b>Clasificación territorial</b> (ámbito provincial, Ley 8.999) + <b>Zonificación de usos del suelo</b> (ámbito municipal). Hover en los indicadores para ver sus reglas de derrota.</div>
+
+    <!-- FICHAS -->
+    <div class="ficha-count">
+      <div class="ficha-num" id="fichasNum">5</div>
+      <div>
+        <div class="ficha-label">Fichas disponibles</div>
+        <div class="ficha-detail" id="fichasDetail">Turno 1 — base inicial</div>
+      </div>
+    </div>
+
+    <!-- PRESETS por clasificación territorial -->
+    <div class="sec">Fichas rápidas — Clasificación territorial (Ley 8.999)</div>
+    <div class="preset-grid" id="tileList"></div>
+
+    <!-- MANUAL -->
+    <details>
+      <summary style="cursor:pointer;font-size:10px;color:var(--muted);font-family:var(--font-mono);user-select:none">▸ Configuración manual avanzada (clasificación × zonificación)</summary>
+      <div style="margin-top:7px;display:flex;flex-direction:column;gap:7px">
+        <div class="selector-grid">
+          <div>
+            <label>Clasificación territorial</label>
+            <div class="select-wrap"><select id="cls"></select></div>
+          </div>
+          <div>
+            <label>Tipo de zonificación</label>
+            <div class="select-wrap"><select id="zon"></select></div>
+          </div>
+        </div>
+        <div>
+          <label>Subzonificación</label>
+          <div class="select-wrap"><select id="sub"></select></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- PREVIEW -->
+    <div class="preview-box" id="preview">
+      <div class="preview-title">Seleccioná hexágono + tipo de ficha</div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="btn-row">
+      <button class="btn btn-green" id="place">▶ Colocar ficha</button>
+      <button class="btn btn-gray" id="inspect">🔍 Inspeccionar hex</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-blue" id="next">⏭ Cerrar turno</button>
+      <button class="btn btn-gray" id="finish">✓ Finalizar partida</button>
+    </div>
+
+    <hr class="divider">
+
+    <!-- INDICATORS -->
+    <div class="sec">Indicadores de derrota / victoria</div>
+    <div class="note-box"><b>🟢 Positivos</b> → perdés si llegan a 0. &nbsp;<b>🔴 Negativos</b> → perdés si llegan a 100. Hover para detalles.</div>
+    <div class="ind-list" id="indicators"></div>
+
+    <!-- POPULATION -->
+    <div class="sec">Distribución urbana/rural</div>
+    <div class="pop-box">
+      <div class="pie" id="popPie"></div>
+      <div class="pop-text" id="popText"></div>
+    </div>
+
+  </div>
+</aside>
+
+</div>
+
+<!-- END OVERLAY -->
+<div class="overlay" id="end">
+  <div class="endbox" id="endbox">
+    <!-- filled dynamically by buildEndScreen() -->
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATOS — PPOT MENDOZA (Ley 8.051/2009 y Ley 8.999/2017)
+// ============================================================
+
+// SOPORTE FÍSICO del tablero (condiciona compatibilidad de clasificación)
+const terrain = {
+  mountain: { name:'Montaña', icon:'⛰️', color:'#2a3a50',
+    hint:'Alta fragilidad. Compatible: Área Natural, Área Especial (riesgo/preservación). INCOMPATIBLE con urbano e industrial.' },
+  piedemonte: { name:'Piedemonte', icon:'🌄', color:'#2e4030',
+    hint:'Zona de transición. Compatible: Área Interfaces, Área Natural. Urbano de alta densidad GENERA CONFLICTO.' },
+  oasis: { name:'Oasis irrigado', icon:'🍇', color:'#1a4028',
+    hint:'Recurso hídrico estratégico. Compatible: Área Rural Irrigada. Urbano/Industrial CREA BOMBA TERRITORIAL.' },
+  secano: { name:'Secano / no irrigado', icon:'🏜️', color:'#3a3010',
+    hint:'Área rural no irrigada o natural. Compatible: Área Natural, Área Especial riesgo. Otro uso GENERA CONFLICTO.' },
+  plain: { name:'Llanura apta', icon:'🌾', color:'#1e3040',
+    hint:'Soporte apto para expansión. Compatible con Área Urbana, Interfaces e Industrial.' }
+};
+
+// CLASIFICACIÓN TERRITORIAL — Ley 8.999/2017 (Cap. 5.2.1)
+// Variables excluyentes: densidad poblacional, densidad edilicia, tamaño de parcela
+const classes = {
+  urbana: {
+    name:'Área Urbana', icon:'🏙️', badge:'cls-urbana',
+    desc:'Alta densidad poblacional (+30 hab/ha) y edilicia (+40% cub). Actividades terciarias y residenciales. Industrias nocivas: incompatibles.',
+    allowed:['funcional','formas','intensidad','incentivos','especial']
+  },
+  interfaces: {
+    name:'Área de Interfaces', icon:'🚪', badge:'cls-interfaces',
+    desc:'Conexión entre área urbana consolidada y rural. Densidad parcelaria intermedia, edilicia y poblacional media/baja. Multifuncional.',
+    allowed:['funcional','formas','intensidad','incentivos','especial']
+  },
+  irrigada: {
+    name:'Área Rural Irrigada', icon:'🍇', badge:'cls-irrigada',
+    desc:'Baja densidad poblacional. Multifunción: producción agraria, agroturismo, servicios especializados. Sin cambios de uso sin dictamen APOT.',
+    allowed:['formas','intensidad','incentivos','especial']
+  },
+  noirrigada: {
+    name:'Área Rural No Irrigada', icon:'🏜️', badge:'cls-noirrigada',
+    desc:'Escasamente modificada. Sin concesiones de agua. Alta demanda de recursos naturales escasos. Representa ecosistemas y formaciones geológicas.',
+    allowed:['formas','intensidad','especial']
+  },
+  natural: {
+    name:'Área Natural', icon:'🌳', badge:'cls-natural',
+    desc:'Máxima naturalidad. Preservación de valores ecológicos. Sin desarrollo productivo intensivo. Compatible con reservas y gestión de riesgo.',
+    allowed:['formas','intensidad','especial']
+  },
+  especial: {
+    name:'Área Especial', icon:'📐', badge:'cls-especial',
+    desc:'Regímenes específicos: infraestructura estratégica, grandes proyectos, zonas de interés social, turístico o ambiental.',
+    allowed:['especial','incentivos','formas']
+  }
+};
+
+// ZONIFICACIÓN — cuatro tipos principales + especial
+// (según documento "Tipos de zonificación de usos del suelo" y presentación Mg. Morgani)
+const zonings = {
+  funcional: {
+    name:'Zonificación Funcional',
+    desc:'Zonas según función principal. Reglas inflexibles sobre usos. Modelo más frecuente.',
+    subs: {
+      residencial: { name:'Residencial', icon:'🏘️', kind:'urban', desc:'Vivienda unifamiliar y colectiva. Actividades compatibles con residencia.' },
+      comercial:   { name:'Comercial',   icon:'🛍️', kind:'urban', desc:'Comercio minorista y servicios al público.' },
+      industrial:  { name:'Industrial',  icon:'🏭', kind:'industrial', desc:'Producción industrial. Puede generar impactos ambientales.' },
+      mixtura:     { name:'Mixtura de usos', icon:'🏙️', kind:'urban', desc:'Combinación residencial-comercial. Reduce necesidad de desplazamiento.' },
+      verde:       { name:'Espacio verde', icon:'🌳', kind:'natural', desc:'Parques, plazas, espacios públicos verdes.' }
+    }
+  },
+  formas: {
+    name:'Zonificación Basada en Formas',
+    desc:'Define zonas por características físicas e identidad urbana. Más fácil de comunicar a la ciudadanía.',
+    subs: {
+      central:    { name:'Centralidad urbana', icon:'🏛️', kind:'urban', desc:'Área de mayor concentración de actividades y simbolismo urbano.' },
+      corredor:   { name:'Corredor urbano',    icon:'🚋', kind:'urban', desc:'Eje de movilidad con densidad lineal. Favorece transporte público.' },
+      paisaje:    { name:'Paisaje rural',      icon:'🍃', kind:'rural', desc:'Preservación de morfología rural productiva.' },
+      historico:  { name:'Distrito histórico', icon:'🏚️', kind:'community', desc:'Identidad patrimonial. Regulaciones de preservación morfológica.' },
+      suburbio:   { name:'Suburbio / interfaz',icon:'🏡', kind:'community', desc:'Zona residencial de baja densidad en área de interfaces.' }
+    }
+  },
+  intensidad: {
+    name:'Zonificación de Intensidad',
+    desc:'Define zonas por nivel de densidad permitida (hab/ha, FOS, FOT). Permite flexibilidad en usos dentro de restricciones de densidad.',
+    subs: {
+      alta:   { name:'Alta densidad',   icon:'🏢', kind:'urban',     desc:'FOT alto, alta cobertura de suelo. Torres y edificios en altura.' },
+      media:  { name:'Media densidad',  icon:'🏠', kind:'urban',     desc:'FOT y FOS intermedios. Tipología de PB+2 o PB+3.' },
+      baja:   { name:'Baja densidad',   icon:'🏡', kind:'community', desc:'Parcelas grandes, baja cobertura. Ciudad difusa, costosa en servicios.' },
+      sindes: { name:'Sin desarrollo',  icon:'⛔', kind:'natural',   desc:'Restricción total de desarrollo. Reserva, riesgo o preservación.' }
+    }
+  },
+  incentivos: {
+    name:'Zonificación de Incentivos',
+    desc:'Recompensa el desarrollo en áreas específicas mediante reducción de impuestos, menor restricción de densidad o provisión de infraestructura.',
+    subs: {
+      densif:     { name:'Construcción y densificación', icon:'🏗️', kind:'urban',     desc:'Incentivo a densificar zonas con infraestructura disponible.' },
+      solar:      { name:'Energía renovable',            icon:'☀️', kind:'natural',   desc:'Paneles solares, eficiencia energética. Menor impacto ambiental.' },
+      vivienda:   { name:'Vivienda accesible',           icon:'🔑', kind:'community', desc:'Vivienda social. Mejora equidad territorial. Reduce conflicto.' },
+      transporte: { name:'Transporte público',           icon:'🚌', kind:'community', desc:'Incentivo a corredores y nodos de movilidad sustentable.' },
+      publico:    { name:'Espacio público',              icon:'🟩', kind:'community', desc:'Plazas, equipamiento, recreación. Valor de uso colectivo.' }
+    }
+  },
+  especial: {
+    name:'Zonificación Especial',
+    desc:'Para problemáticas específicas: interés social, turístico, ambiental, grandes proyectos urbanos o infraestructura estratégica.',
+    subs: {
+      social:   { name:'Interés social',          icon:'👥', kind:'community', desc:'Hábitat popular, regularización dominial, urbanizaciones sociales.' },
+      turistico: { name:'Interés turístico',      icon:'🍷', kind:'community', desc:'Vitivinicultura, ecoturismo, paisaje productivo.' },
+      ambiental: { name:'Preservación ambiental', icon:'🛡️', kind:'natural',  desc:'Reserva natural, conservación de biodiversidad o cuencas.' },
+      riesgo:    { name:'Reserva por riesgo',     icon:'⚠️', kind:'natural',  desc:'Zonas aluvionales, sísmicas o de inundación. Sin desarrollo.' },
+      logistica: { name:'Logística controlada',   icon:'🚚', kind:'industrial', desc:'Parques industriales o de servicios con gestión ambiental.' }
+    }
+  }
+};
+
+// FICHAS PRESETS — cada una es una combinación clasificación × zonificación representativa del AMM
+const tilePresets = [
+  { id:'urb_alta',   name:'Residencial alta densidad', cls:'urbana',     zon:'intensidad', sub:'alta',    icon:'🏢', pcls:'Área Urbana · Intensidad' },
+  { id:'urb_mix',    name:'Mixtura de usos urbanos',   cls:'urbana',     zon:'funcional',  sub:'mixtura', icon:'🏙️', pcls:'Área Urbana · Funcional' },
+  { id:'urb_ind',    name:'Industrial (zona urbana)',   cls:'urbana',     zon:'funcional',  sub:'industrial',icon:'🏭',pcls:'Área Urbana · Funcional' },
+  { id:'int_corr',   name:'Corredor de interfaces',    cls:'interfaces', zon:'formas',     sub:'corredor',icon:'🚋', pcls:'Interfaces · Formas' },
+  { id:'int_viv',    name:'Vivienda accesible interfaz',cls:'interfaces', zon:'incentivos', sub:'vivienda',icon:'🔑', pcls:'Interfaces · Incentivos' },
+  { id:'irr_paisaje',name:'Paisaje rural irrigado',    cls:'irrigada',   zon:'formas',     sub:'paisaje', icon:'🍃', pcls:'Rural Irrigada · Formas' },
+  { id:'irr_tur',    name:'Turismo / agroturismo',     cls:'irrigada',   zon:'especial',   sub:'turistico',icon:'🍷',pcls:'Rural Irrigada · Especial' },
+  { id:'nat_res',    name:'Reserva natural / RNPA',    cls:'natural',    zon:'especial',   sub:'ambiental',icon:'🛡️',pcls:'Área Natural · Especial' },
+  { id:'esp_pub',    name:'Equipamiento comunitario',  cls:'especial',   zon:'especial',   sub:'social',  icon:'👥', pcls:'Área Especial · Social' },
+  { id:'nat_riesgo', name:'Zona de riesgo / aluvión',  cls:'natural',    zon:'especial',   sub:'riesgo',  icon:'⚠️', pcls:'Área Natural · Riesgo' }
+];
+
+// CRISIS territoriales — basadas en problemáticas reales del AMM
+const events = [
+  {
+    t:'Expansión sobre oasis irrigado',
+    x:'Loteos privados avanzan sobre áreas rurales irrigadas con dictamen APOT pendiente.',
+    ex:'La Ley 8.999 prohíbe cambios de uso en rural irrigada sin dictamen vinculante de la APOT. La presión desarrolladora convierte suelo productivo en urbanización difusa, consumiendo agua y fragmentando el tejido rural.',
+    a:'Restringir loteos, dictamen APOT',
+    b:'Autorizar loteos con EIA',
+    A:{water:8,sustain:6,conflict:-3,value:-1,build:-1},
+    B:{build:5,value:4,sustain:-8,water:-7,conflict:7,risk:4}
+  },
+  {
+    t:'Demanda de vivienda accesible',
+    x:'Sectores populares son expulsados hacia áreas de interfaces mal servidas.',
+    ex:'El valor de cambio del suelo urbano excluye a los sectores medios y bajos. La zonificación de incentivos para vivienda accesible mejora equidad, pero requiere subsidio e infraestructura. Esperar al mercado profundiza la segregación.',
+    a:'Vivienda accesible con incentivos',
+    b:'Esperar inversión privada',
+    A:{equity:10,sustain:2,value:-2,conflict:-5,build:1},
+    B:{build:4,value:7,equity:-8,conflict:6,risk:2}
+  },
+  {
+    t:'Movilidad insustentable',
+    x:'La expansión difusa en interfaces aumenta dependencia del auto y costos de red.',
+    ex:'Una ciudad de baja densidad en interfaces requiere más infraestructura por habitante. Los corredores de transporte y la densidad media reducen el costo social. La baja densidad suburbanizada parece económica al inicio, pero es la más cara de sostener.',
+    a:'Corredores + densidad media',
+    b:'Más expansión suburbana',
+    A:{compact:7,sustain:4,conflict:-2,build:1},
+    B:{build:4,sustain:-5,compact:-8,conflict:5,risk:2}
+  },
+  {
+    t:'Presión sobre piedemonte',
+    x:'Desarrolladoras solicitan urbanizar sectores de piedemonte y reserva natural.',
+    ex:'El piedemonte es zona de recarga de acuíferos y alta peligrosidad aluvional. La Macrozonificación del municipio de Mendoza lo define como "Natural de amortiguación" o "Reserva Natural Divisadero Largo". La urbanización allí incrementa riesgo y destruye soporte ambiental.',
+    a:'Condicionar: zona de amortiguación',
+    b:'Aprobar con restricciones mínimas',
+    A:{risk:-5,sustain:5,conflict:-3,water:3,value:-2},
+    B:{build:5,value:6,risk:10,sustain:-9,conflict:7}
+  },
+  {
+    t:'Conflicto de usos en interfaz',
+    x:'Industrias y residencias coexisten sin amortiguadores en área de interfaces.',
+    ex:'La zonificación funcional separa usos para evitar incompatibilidades, pero en áreas de interfaces la mixtura espontánea genera conflictos. Crear zonas de amortiguación baja el conflicto; ignorarlos produce bombas territoriales.',
+    a:'Crear amortiguadores / zonas mixtas',
+    b:'Ignorar incompatibilidades',
+    A:{conflict:-6,sustain:4,risk:-4,equity:2,build:-1},
+    B:{build:4,conflict:8,risk:6,sustain:-3}
+  },
+  {
+    t:'Legitimidad del instrumento normativo',
+    x:'Excepciones acumuladas vacían de contenido el código de zonificación.',
+    ex:'Cuando la norma se convierte en punto de partida de negociación caso a caso, la zonificación pierde su función regulatoria. Revisar el código mejora la legitimidad técnica y el valor de uso del suelo para todos. Autorizar excepciones beneficia al mercado de corto plazo.',
+    a:'Revisar y actualizar código',
+    b:'Autorizar más excepciones',
+    A:{conflict:-5,sustain:3,equity:3,build:-1,value:-1},
+    B:{build:5,value:6,conflict:7,risk:5,equity:-3}
+  }
+];
+
+// ============================================================
+// ESTADO Y VARIABLES
+// ============================================================
+let grid=[], selected=null, preset='urb_alta', turnN=1, actionsN=5;
+let bombs=[], detonations=0, gameOver=false;
+let builtThisTurn={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0};
+let prev={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0};
+let styleScore={market:0,green:0,popular:0,chaos:0};
+let state={build:0,sustain:55,value:55,water:55,risk:15,conflict:15,compact:45,equity:55,popUrban:50,popRural:50};
+let current=events[0], crisisUsed=false;
+
+// DOM
+const board=document.getElementById('board');
+const hexInfo=document.getElementById('hexInfo');
+const indicators=document.getElementById('indicators');
+const narrative=document.getElementById('narrative');
+const logEl=document.getElementById('log');
+const nickname=document.getElementById('nickname');
+const popPie=document.getElementById('popPie');
+const popText=document.getElementById('popText');
+const crisisCard=document.getElementById('crisisCard');
+const crisisOptions=document.getElementById('crisisOptions');
+const crisisWrap=document.getElementById('crisisWrap');
+const crisisResolvedBadge=document.getElementById('crisisResolvedBadge');
+const previewEl=document.getElementById('preview');
+const tileListEl=document.getElementById('tileList');
+const clsSel=document.getElementById('cls');
+const zonSel=document.getElementById('zon');
+const subSel=document.getElementById('sub');
+const fichasNum=document.getElementById('fichasNum');
+const fichasDetail=document.getElementById('fichasDetail');
+const endOverlay=document.getElementById('end');
+
+// ============================================================
+// AUDIO ENGINE (Web Audio API — sin archivos externos)
+// ============================================================
+const AC = new (window.AudioContext||window.webkitAudioContext)();
+
+function playTone(freq,type,duration,vol=0.18,attack=0.01,decay=0.15){
+  try{
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type=type;o.frequency.setValueAtTime(freq,AC.currentTime);
+    g.gain.setValueAtTime(0,AC.currentTime);
+    g.gain.linearRampToValueAtTime(vol,AC.currentTime+attack);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+attack+decay);
+    o.start(AC.currentTime);o.stop(AC.currentTime+attack+decay+0.05);
+  }catch(e){}
+}
+
+function playChord(freqs,type='sine',duration=0.3,vol=0.12){
+  freqs.forEach((f,i)=>setTimeout(()=>playTone(f,type,duration,vol),i*18));
+}
+
+const sfx={
+  select:  ()=>playTone(520,'sine',0.08,0.1,0.005,0.08),
+  place:   ()=>playChord([261,329,392],'sine',0.3,0.13),
+  placeBad:()=>{ playTone(180,'sawtooth',0.3,0.15,0.01,0.25); setTimeout(()=>playTone(140,'sawtooth',0.2,0.12),120); },
+  bomb:    ()=>{ playTone(80,'sawtooth',0.5,0.2,0.01,0.4); setTimeout(()=>playTone(60,'sawtooth',0.4,0.18),200); },
+  explode: ()=>{ [80,60,50,40].forEach((f,i)=>setTimeout(()=>playTone(f,'sawtooth',0.3,0.22-i*0.04),i*60)); },
+  crisis:  ()=>playChord([440,554,659],'triangle',0.25,0.1),
+  crisisOk:()=>playChord([392,494,587],'sine',0.3,0.12),
+  turnEnd: ()=>playChord([261,330,392,523],'sine',0.4,0.1),
+  defeat:  ()=>{ [220,196,175,147].forEach((f,i)=>setTimeout(()=>playTone(f,'sawtooth',0.4,0.15),i*120)); },
+  victory: ()=>{ [261,330,392,523,659].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.35,0.14),i*80)); },
+};
+
+function unlockAudio(){AC.resume();}
+document.addEventListener('click',unlockAudio,{once:true});
+
+// ============================================================
+// ZOOM / PAN STATE
+// ============================================================
+let zoom=1, panX=0, panY=0, isPanning=false, panStart={x:0,y:0};
+const GRID_W=850, GRID_H=570; // logical SVG size
+
+function applyTransform(){
+  board.setAttribute('viewBox',`${-panX/zoom} ${-panY/zoom} ${GRID_W/zoom} ${GRID_H/zoom}`);
+}
+
+function zoomBoard(factor, cx, cy){
+  const wrap=document.getElementById('boardWrap');
+  const rect=wrap.getBoundingClientRect();
+  const ocx=(cx!==undefined?cx:rect.width/2);
+  const ocy=(cy!==undefined?cy:rect.height/2);
+  // world coords of cursor before zoom
+  const wx=ocx/rect.width*GRID_W/zoom - panX/zoom;
+  const wy=ocy/rect.height*GRID_H/zoom - panY/zoom;
+  zoom=Math.min(4,Math.max(0.4,zoom*factor));
+  // keep world point under cursor
+  panX=-(wx - ocx/rect.width*GRID_W/zoom)*zoom;
+  panY=-(wy - ocy/rect.height*GRID_H/zoom)*zoom;
+  applyTransform();
+}
+
+function resetZoom(){
+  zoom=1;panX=0;panY=0;applyTransform();
+  centerGrid();
+}
+
+function centerGrid(){
+  // compute actual hex bounds and center the SVG viewBox
+  if(!grid.length)return;
+  const xs=grid.map(h=>h.x), ys=grid.map(h=>h.y);
+  const minX=Math.min(...xs)-40, maxX=Math.max(...xs)+40;
+  const minY=Math.min(...ys)-40, maxY=Math.max(...ys)+40;
+  const gw=maxX-minX, gh=maxY-minY;
+  const wrap=document.getElementById('boardWrap');
+  const ww=wrap.clientWidth||700, wh=wrap.clientHeight||420;
+  // scale to fit
+  const scaleX=ww/gw, scaleY=wh/gh;
+  const s=Math.min(scaleX,scaleY,1)*0.92;
+  zoom=s;
+  panX=(ww - gw*s)/2 - minX*s;
+  panY=(wh - gh*s)/2 - minY*s;
+  applyTransform();
+}
+
+// Pan via mouse drag
+function initPan(){
+  const wrap=document.getElementById('boardWrap');
+  wrap.addEventListener('mousedown',e=>{
+    if(e.button!==0)return;
+    isPanning=true;panStart={x:e.clientX-panX,y:e.clientY-panY};
+    board.style.cursor='grabbing';
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!isPanning)return;
+    panX=e.clientX-panStart.x;panY=e.clientY-panStart.y;
+    applyTransform();
+  });
+  window.addEventListener('mouseup',()=>{isPanning=false;board.style.cursor='grab';});
+  // Wheel zoom
+  wrap.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const rect=wrap.getBoundingClientRect();
+    zoomBoard(e.deltaY<0?1.12:1/1.12, e.clientX-rect.left, e.clientY-rect.top);
+  },{passive:false});
+}
+
+// ============================================================
+// GRID
+// ============================================================
+function makeGrid(){
+  const rows=7,cols=8,size=42,w=size*2,h=Math.sqrt(3)*size;
+  for(let r=0;r<rows;r++) for(let q=0;q<cols;q++){
+    // flat-top hex layout
+    const x=60+q*w*0.75;
+    const y=55+r*h+(q%2?h/2:0);
+    let t='plain';
+    if(q<1&&r<3) t='mountain';
+    else if(q<3)  t='piedemonte';
+    else if(q>5&&r>4) t='secano';
+    else if(r>4&&q<6) t='oasis';
+    grid.push({q,r,x,y,t,built:false,cls:null,zon:null,sub:null});
+  }
+}
+
+function hexPath(x,y,s=42){
+  let pts=[];
+  for(let i=0;i<6;i++){let a=Math.PI/180*(60*i);pts.push([x+s*Math.cos(a),y+s*Math.sin(a)].join(','))}
+  return pts.join(' ');
+}
+
+function tileColor(h){
+  const k=h.cls,s=h.sub;
+  if(k==='urbana'){
+    if(['alta','mixtura','residencial','comercial','central','corredor','densif'].includes(s)) return '#1a3a6a';
+    if(s==='industrial'||s==='logistica') return '#5a1a1a';
+    return '#1e3a60';
+  }
+  if(k==='interfaces'){
+    if(['alta','corredor','densif'].includes(s)) return '#2a3a5a';
+    if(s==='vivienda'||s==='social'||s==='publico') return '#2a1a5a';
+    return '#203050';
+  }
+  if(k==='irrigada') return '#0a3a1a';
+  if(k==='noirrigada') return '#3a2a08';
+  if(k==='natural') return '#082a14';
+  if(k==='especial'){
+    if(s==='social'||s==='turistico'||s==='publico') return '#2a0a3a';
+    return '#1a1a3a';
+  }
+  return '#1a2a3a';
+}
+
+// ============================================================
+// RENDER BOARD
+// ============================================================
+function renderBoard(){
+  board.innerHTML='';
+  const [c,z,s]=getSelectors();
+  let previewOut=null;
+  if(selected&&!selected.built&&c&&z&&s) previewOut=calc(selected,c,z,s);
+
+  grid.forEach(h=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points',hexPath(h.x,h.y));
+    poly.setAttribute('fill',h.built?tileColor(h):terrain[h.t].color);
+    let clsStr=h.built?'hexBuilt':'hexBase';
+    if(h===selected) clsStr+=' selected-hex';
+    if(h===selected&&previewOut) clsStr+=previewOut.bomb?' danger-preview':' warn-preview';
+    if(bombs.some(b=>b.q===h.q&&b.r===h.r)&&h!==selected) clsStr+=' hex-bomb-pulse';
+    poly.setAttribute('class',clsStr);
+    poly.onclick=()=>selectHex(h);
+    g.appendChild(poly);
+
+    const icon=document.createElementNS('http://www.w3.org/2000/svg','text');
+    icon.setAttribute('x',h.x); icon.setAttribute('y',h.built?h.y-5:h.y);
+    icon.setAttribute('class','hex-icon');
+    icon.textContent=h.built?zonings[h.zon].subs[h.sub].icon:terrain[h.t].icon;
+    g.appendChild(icon);
+
+    if(h.built){
+      const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x',h.x); lbl.setAttribute('y',h.y+19);
+      lbl.setAttribute('class','hex-label');
+      lbl.textContent=zonings[h.zon].subs[h.sub].name.substring(0,12);
+      g.appendChild(lbl);
+    }
+    board.appendChild(g);
+  });
+
+  // Bombs overlay
+  bombs.forEach(b=>{
+    const h=grid.find(x=>x.q===b.q&&x.r===b.r);
+    if(!h)return;
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const c2=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c2.setAttribute('cx',h.x+21); c2.setAttribute('cy',h.y-21); c2.setAttribute('r',13);
+    c2.setAttribute('class','bomb-bg');
+    const bi=document.createElementNS('http://www.w3.org/2000/svg','text');
+    bi.setAttribute('x',h.x+21); bi.setAttribute('y',h.y-20); bi.setAttribute('class','hex-bomb-icon'); bi.textContent='💣';
+    const bt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    bt.setAttribute('x',h.x+21); bt.setAttribute('y',h.y-1); bt.setAttribute('class','hex-timer'); bt.textContent=b.timer;
+    g.appendChild(c2); g.appendChild(bi); g.appendChild(bt);
+    board.appendChild(g);
+  });
+}
+
+// ============================================================
+// SELECT HEX
+// ============================================================
+function selectHex(h){
+  sfx.select();
+  selected=h;
+  updateHexInfo();
+  renderBoard();
+  updatePreview();
+}
+
+function updateHexInfo(){
+  if(!selected){hexInfo.textContent='Hacé clic en un hexágono del tablero.';hexInfo.className='terrain-info';return}
+  const h=selected;
+  const hasBomb=bombs.some(b=>b.q===h.q&&b.r===h.r);
+  if(h.built){
+    const bomb=hasBomb?` 💣 Bomba activa — ${bombs.find(b=>b.q===h.q&&b.r===h.r)?.timer} turnos`:'';
+    hexInfo.innerHTML=`<span class="cls-badge ${classes[h.cls].badge}">${classes[h.cls].icon} ${classes[h.cls].name}</span> <b>${zonings[h.zon].subs[h.sub].icon} ${zonings[h.zon].subs[h.sub].name}</b> sobre ${terrain[h.t].icon} ${terrain[h.t].name}${bomb}`;
+    hexInfo.className='terrain-info';
+  } else {
+    hexInfo.innerHTML=`<b>${terrain[h.t].icon} ${terrain[h.t].name}</b> — ${terrain[h.t].hint}`;
+    hexInfo.className='terrain-info';
+  }
+}
+
+// ============================================================
+// SELECTORS
+// ============================================================
+function getSelectors(){return[clsSel.value,zonSel.value,subSel.value]}
+
+function renderSelectors(){
+  clsSel.innerHTML='';
+  Object.entries(classes).forEach(([k,v])=>clsSel.innerHTML+=`<option value="${k}">${v.icon} ${v.name}</option>`);
+  const pr=tilePresets.find(t=>t.id===preset);
+  clsSel.value=pr.cls;
+  fillZon();
+}
+
+function fillZon(){
+  zonSel.innerHTML='';
+  classes[clsSel.value].allowed.forEach(k=>zonSel.innerHTML+=`<option value="${k}">${zonings[k].name}</option>`);
+  const pr=tilePresets.find(t=>t.id===preset);
+  if(classes[clsSel.value].allowed.includes(pr.zon)) zonSel.value=pr.zon;
+  fillSub();
+}
+
+function fillSub(){
+  subSel.innerHTML='';
+  Object.entries(zonings[zonSel.value].subs).forEach(([k,v])=>{
+    if(validSub(clsSel.value,k)) subSel.innerHTML+=`<option value="${k}">${v.icon} ${v.name}</option>`;
+  });
+  const pr=tilePresets.find(t=>t.id===preset);
+  if([...subSel.options].some(o=>o.value===pr.sub)) subSel.value=pr.sub;
+  updatePreview();
+}
+
+// Compatibilidad clasificación × subzonificación (según lógica del PPOT)
+function validSub(c,s){
+  // Área natural: solo preservación, riesgo, sin desarrollo
+  if(c==='natural') return['sindes','ambiental','riesgo','paisaje'].includes(s);
+  // Rural no irrigada: sin desarrollo intensivo
+  if(c==='noirrigada') return['paisaje','sindes','solar','riesgo','logistica','baja'].includes(s);
+  // Rural irrigada: sin industrial, sin alta densidad
+  if(c==='irrigada') return['paisaje','sindes','solar','publico','ambiental','riesgo','baja','turistico','vivienda'].includes(s);
+  // Interfaces: sin industrial puro ni alta densidad
+  if(c==='interfaces') return!['industrial','alta'].includes(s);
+  // Urbana y especial: todo permitido
+  return true;
+}
+
+// ============================================================
+// PREVIEW Y CÁLCULO DE IMPACTO
+// ============================================================
+function updatePreview(){
+  const [c,z,s]=getSelectors();
+  if(!c||!z||!s){previewEl.innerHTML='<div class="preview-title">Seleccioná configuración</div>';previewEl.className='preview-box';return}
+  const h=selected||{t:'plain'};
+  const out=calc(h,c,z,s);
+  const sub=zonings[z].subs[s];
+  const cls2=classes[c];
+  let html=`<div class="preview-title">${cls2.icon} ${cls2.name} + ${sub.icon} ${sub.name}</div>`;
+  html+=`<div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--font-mono)">${zonings[z].name}</div>`;
+  if(out.bomb){
+    html+=`<div style="color:var(--red);font-size:10px;font-family:var(--font-mono);margin-bottom:4px">⚠️ BOMBA TERRITORIAL: ${out.reason}</div>`;
+    previewEl.className='preview-box bomb';
+  } else {
+    previewEl.className='preview-box ok';
+  }
+  const names={build:'Constr.',sustain:'Sustent.',value:'Valor',water:'Agua',risk:'Riesgo',conflict:'Conflicto',compact:'Compact.',equity:'Equidad'};
+  const negs=['risk','conflict'];
+  let phtml='<div class="impact-pills">';
+  Object.entries(out.d).forEach(([k,v])=>{
+    if(v===0||!names[k])return;
+    const isNeg=negs.includes(k);
+    const good=(isNeg&&v<0)||(!isNeg&&v>0);
+    phtml+=`<span class="ip ${good?'pos':'neg'}">${names[k]} ${v>0?'+':''}${v}</span>`;
+  });
+  phtml+='</div>';
+  html+=phtml;
+  previewEl.innerHTML=html;
+  renderBoard();
+}
+
+// ============================================================
+// CÁLCULO DE IMPACTO — basado en clasificación × soporte físico
+// ============================================================
+function calc(h,c,z,s){
+  const kind=zonings[z].subs[s].kind;
+  let d={build:0,sustain:0,value:0,water:0,risk:0,conflict:0,compact:0,equity:0,popUrban:0,popRural:0};
+
+  // Impacto base por tipo de uso
+  if(kind==='urban')      Object.assign(d,{build:3,sustain:-2,value:3,compact:2,popUrban:4,popRural:-4});
+  if(kind==='industrial') Object.assign(d,{build:5,sustain:-5,value:4,risk:2,conflict:3,popUrban:2,popRural:-2});
+  if(kind==='rural')      Object.assign(d,{build:-1,sustain:5,water:3,value:-1,popUrban:-3,popRural:3});
+  if(kind==='natural')    Object.assign(d,{build:-2,sustain:7,water:4,value:-2,popUrban:-1,popRural:1});
+  if(kind==='community')  Object.assign(d,{build:0,sustain:3,equity:5,conflict:-2,popUrban:1,popRural:-1});
+
+  // Modificadores por clasificación territorial (PPOT)
+  if(c==='irrigada')  {d.water+=2;d.sustain+=2}
+  if(c==='noirrigada'){d.water+=1;d.sustain+=3;d.value-=1}
+  if(c==='natural')   {d.sustain+=2;d.risk-=2}
+  if(c==='interfaces'){d.compact+=1}
+
+  // Bonificación por buenas prácticas
+  if(c==='interfaces'&&(kind==='community'||kind==='urban')&&z==='incentivos') {d.equity+=2;d.compact+=2}
+  if(c==='urbana'&&z==='intensidad'&&s==='alta') {d.compact+=3}
+
+  // BOMBAS TERRITORIALES — incompatibilidades normativas (PPOT)
+  let bomb=false, reason='';
+
+  // Urbano/Industrial en oasis irrigado → BOMBA (destruye recurso hídrico estratégico)
+  if(h.t==='oasis'&&(c==='urbana'||(kind==='urban'||kind==='industrial'))){
+    bomb=true; reason='Urbanización en oasis irrigado viola Ley 8.999: recurso hídrico estratégico';
+    d.water-=12;d.sustain-=9;d.conflict+=8;d.risk+=5;
+  }
+
+  // Urbanización en montaña → BOMBA (riesgo aluvional y sísmico)
+  if(h.t==='mountain'&&(c==='urbana'||kind==='urban'||kind==='industrial')){
+    bomb=true; reason='Urbanización en montaña: riesgo aluvional y sísmico alto (ver Macrozonificación)';
+    d.risk+=12;d.sustain-=9;d.conflict+=8;
+  }
+
+  // Urbanización intensa en piedemonte → BOMBA (zona de amortiguación)
+  if(h.t==='piedemonte'&&(c==='urbana')&&(kind==='urban'||kind==='industrial')&&['alta','industrial'].includes(s)){
+    bomb=true; reason='Alta densidad en piedemonte viola zona de amortiguación (Macrozonificación)';
+    d.risk+=9;d.sustain-=7;d.conflict+=6;d.water-=4;
+  }
+
+  // Uso urbano en secano sin irrigación → BOMBA
+  if(h.t==='secano'&&(c==='urbana'||kind==='urban'||kind==='industrial')){
+    bomb=true; reason='Área sin irrigación no puede sustentar uso urbano (Ley 8.999, Área Rural No Irrigada)';
+    d.risk+=6;d.sustain-=6;d.conflict+=5;d.water-=5;
+  }
+
+  // Rural irrigada usado en llanura apta (no compatible funcionalmente)
+  if(h.t==='plain'&&(c==='irrigada'||kind==='rural')&&!['interfaces','especial'].includes(c)){
+    bomb=true; reason='Llanura apta para urbano/industrial asignada a rural irrigada: incompatibilidad funcional';
+    d.value-=3;d.conflict+=4;
+  }
+
+  return{d,bomb,reason,kind};
+}
+
+function applyState(d){
+  Object.entries(d).forEach(([k,v])=>state[k]=Math.max(0,Math.min(100,(state[k]||0)+v)));
+  let total=state.popUrban+state.popRural;
+  if(total>0){state.popUrban=Math.max(0,Math.min(100,state.popUrban/total*100));state.popRural=100-state.popUrban}
+}
+
+function growthCategory(c,kind,s){
+  if(kind==='industrial') return'industrial';
+  if(c==='urbana'||kind==='urban') return'urban';
+  if(c==='irrigada'||kind==='rural'||s==='paisaje') return'productive';
+  if(kind==='natural'||kind==='community'||['verde','sindes','ambiental','riesgo','solar','publico','vivienda','social','transporte'].includes(s)) return'restrictive';
+  return'none';
+}
+
+// ============================================================
+// PLACE TILE
+// ============================================================
+function placeTile(){
+  if(!selected||selected.built||actionsN<=0){
+    hexInfo.innerHTML='<span style="color:var(--yellow)">⚠️ Seleccioná un hexágono vacío y verificá fichas disponibles.</span>';
+    hexInfo.className='terrain-info';
+    return;
+  }
+  const [c,z,s]=getSelectors();
+  const out=calc(selected,c,z,s);
+  Object.assign(selected,{built:true,cls:c,zon:z,sub:s});
+  actionsN--;
+  applyState(out.d);
+  if(out.bomb){ sfx.placeBad(); addBomb(selected,out.reason); }
+  else { sfx.place(); }
+  const g=growthCategory(c,out.kind,s);
+  if(g==='urban') builtThisTurn.urban++;
+  if(g==='industrial') builtThisTurn.industrial++;
+  if(g==='productive') builtThisTurn.productive++;
+  if(g==='restrictive') builtThisTurn.restrictive++;
+  story(`${classes[c].icon} ${classes[c].name} + ${zonings[z].subs[s].name} sobre ${terrain[selected.t].name}. ${out.bomb?'💣 '+out.reason:'Compatible.'}`);
+  citizenComment(commentForMove(c,out.kind,s,out.bomb));
+  if(checkDefeat()) return;
+  render();
+}
+
+function addBomb(h,reason){
+  if(!bombs.some(b=>b.q===h.q&&b.r===h.r)){
+    bombs.push({q:h.q,r:h.r,reason,timer:3});
+    sfx.bomb();
+    applyState({conflict:5,sustain:-3,risk:4});
+    story('💣 Bomba territorial: '+reason+'. Explota en 3 turnos.');
+    citizenComment('💣 Periodista: "Fuentes municipales aseguran que la bomba es sólo una oportunidad de mejora con mecha."');
+  }
+}
+
+function tickBombs(){
+  bombs.forEach(b=>b.timer--);
+  const exp=bombs.filter(b=>b.timer<=0);
+  bombs=bombs.filter(b=>b.timer>0);
+  exp.forEach(b=>{
+    detonations++;
+    sfx.explode();
+    applyState({conflict:14,sustain:-10,water:-6,risk:9,equity:-5});
+    story('💥 Explotó bomba territorial: '+b.reason);
+    citizenComment('💥 Vecino: "Nos dijeron que era planificación estratégica, pero hizo ruido de garrafa."');
+  });
+}
+
+// ============================================================
+// CRISIS
+// ============================================================
+function renderCrisis(){
+  const makeImpact=obj=>{
+    const names={build:'Constr.',sustain:'Sustent.',value:'Valor',water:'Agua',risk:'Riesgo',conflict:'Conflicto',compact:'Compact.',equity:'Equidad'};
+    const negs=['risk','conflict'];
+    return Object.entries(obj).map(([k,v])=>{
+      if(!names[k])return'';
+      const isNeg=negs.includes(k);
+      const good=(isNeg&&v<0)||(!isNeg&&v>0);
+      return`<span class="ip ${good?'pos':'neg'}">${names[k]} ${v>0?'+':''}${v}</span>`;
+    }).join('');
+  };
+
+  crisisCard.innerHTML=`
+    <div class="crisis-title">${current.t}</div>
+    <div class="crisis-block"><div class="crisis-label">Situación</div><div class="crisis-text">${current.x}</div></div>
+    <div class="crisis-block"><div class="crisis-label">Marco territorial</div><div class="crisis-text">${current.ex}</div></div>`;
+
+  crisisOptions.innerHTML=`
+    <div class="crisis-opt">
+      <b>A · ${current.a}</b>
+      <div class="impact-pills">${makeImpact(current.A)}</div>
+    </div>
+    <div class="crisis-opt">
+      <b>B · ${current.b}</b>
+      <div class="impact-pills">${makeImpact(current.B)}</div>
+    </div>
+    <div class="btn-row" style="margin-top:7px">
+      <button class="btn btn-green" onclick="crisis(events[(turnN-1)%events.length].A,'${current.a}')">A: ${current.a}</button>
+      <button class="btn btn-red" onclick="crisis(events[(turnN-1)%events.length].B,'${current.b}')">B: ${current.b}</button>
+    </div>`;
+}
+
+function crisis(choice,label){
+  if(crisisUsed){story('La crisis ya fue resuelta este turno.');return}
+  crisisUsed=true;
+  sfx.crisisOk();
+  applyState(choice);
+  if((choice.build||0)>0){
+    builtThisTurn.crisisBuild+=choice.build;
+    story('🏗️ Resolución de crisis: +'+choice.build+' fichas para el próximo turno.');
+  }
+  story('Crisis resuelta: '+label);
+  citizenComment(commentForCrisis(label));
+  crisisWrap.classList.add('crisis-resolved');
+  crisisResolvedBadge.style.display='block';
+  if(checkDefeat()) return;
+  render();
+}
+
+// ============================================================
+// INDICATORS
+// ============================================================
+function renderIndicators(){
+  const defs=[
+    ['sustain','Sustentabilidad','pos','Perdés si llega a 0. Colapso ambiental: el soporte físico ya no puede sostener el sistema urbano.'],
+    ['water','Agua / oasis','pos','Perdés si llega a 0. Colapso hídrico: el oasis mendocino deja de sostener la urbanización.'],
+    ['equity','Valor de uso / equidad','pos','Perdés si llega a 0. La ciudad deja de ser habitable para los sectores populares.'],
+    ['value','Valor económico','pos','Perdés si llega a 0. La ciudad pierde dinámica económica y capacidad de inversión.'],
+    ['conflict','Conflicto territorial','neg','Perdés si llega a 100. Ciudad ingobernable: actores en disputa sin resolución.'],
+    ['risk','Riesgo territorial','neg','Perdés si llega a 100. Amenazas naturales (aluviones, sismos, inundaciones) y antrópicas acumuladas vuelven el territorio inhabitable.'],
+    ['compact','Compacidad urbana','pos','No derrota directa. Ciudad difusa = más costo de red, menos sustentabilidad.'],
+    ['build','Capacidad constructiva','pos','Determina fichas futuras. Muy alta sin soporte = bombas. Muy baja = ciudad estancada.']
+  ];
+  indicators.innerHTML='';
+  defs.forEach(([k,n,type,help])=>{
+    const v=Math.round(state[k]);
+    const danger=(type==='pos'&&v<=15)||(type==='neg'&&v>=85);
+    const warn=(type==='pos'&&v<=30)||(type==='neg'&&v>=70);
+    let valClass='good';
+    if(type==='pos'){if(v<=30)valClass='bad';else if(v<=50)valClass='ok';}
+    else{if(v>=70)valClass='bad';else if(v>=50)valClass='ok';}
+    indicators.innerHTML+=`<div class="indicator ${danger?'danger':warn?'warn':''}">
+      <div class="ind-header">
+        <span class="ind-name">${type==='neg'?'🔴':'🟢'} ${n}</span>
+        <span class="ind-val ${valClass}">${v}</span>
+      </div>
+      <div class="bar"><div class="${type==='neg'?'fill fill-neg':'fill fill-pos'}" style="width:${v}%"></div></div>
+      <div class="ind-help">${help}</div>
+    </div>`;
+  });
+}
+
+function renderPopulation(){
+  const u=Math.round(state.popUrban), r=Math.round(state.popRural);
+  popPie.style.background=`conic-gradient(#38bdf8 0 ${u}%,#4ade80 ${u}% 100%)`;
+  popPie.style.boxShadow='inset 0 0 0 9px var(--panel2)';
+  const warn=u>75||r>75;
+  popText.innerHTML=`<span style="color:#38bdf8">■</span> Urbana ${u}%<br><span style="color:#4ade80">■</span> Rural ${r}%<br>${warn?`<span class="pop-warn">⚠️ Derrota si supera 85%</span>`:'Equilibrio tolerable'}`;
+}
+
+function renderHeader(){
+  document.getElementById('hTurn').textContent=turnN;
+  document.getElementById('hFichas').textContent=actionsN;
+  document.getElementById('hFichasPill').className='hpill'+(actionsN===0?' danger':actionsN<=2?' warn':'');
+  document.getElementById('hBombs').textContent=bombs.length;
+  document.getElementById('hBombsPill').className='hpill'+(bombs.length>0?' bomb':'');
+  document.getElementById('hBooms').textContent=detonations;
+  document.getElementById('hBoomsPill').className='hpill'+(detonations>=3?' danger':detonations>0?' warn':'');
+}
+
+function renderFichasCount(){
+  fichasNum.textContent=actionsN;
+  fichasNum.style.color=actionsN===0?'var(--red)':actionsN<=2?'var(--yellow)':'var(--teal)';
+  if(turnN===1) fichasDetail.textContent='Turno 1 — 5 fichas base';
+  else {
+    const u=prev.urban,i=prev.industrial,p=prev.productive,r=prev.restrictive,c=prev.crisisBuild;
+    fichasDetail.textContent=`Urb +${u} · Ind +${i} · Prod +${p} · Crisis +${c} · Ambiental -${r}`;
+  }
+}
+
+function render(){
+  renderBoard();
+  renderCrisis();
+  renderIndicators();
+  renderPopulation();
+  renderHeader();
+  renderFichasCount();
+  updatePreview();
+  updateHexInfo();
+}
+
+// ============================================================
+// NARRATIVE
+// ============================================================
+function story(t){
+  const d=document.createElement('div');
+  d.className='entry';d.textContent='▸ '+t;logEl.prepend(d);
+}
+function citizenComment(t){
+  const d=document.createElement('div');
+  d.className='msg';d.textContent=t;narrative.prepend(d);
+  nickname.textContent='Apodo: '+cityNickname();
+}
+
+function commentForMove(c,kind,s,bomb){
+  if(bomb){styleScore.chaos++;return'💣 Vecino: "No sé qué aprobaron, pero ya armé grupo de WhatsApp con sirena de emergencia."'}
+  if(kind==='industrial'){styleScore.market++;return'🏭 Desarrollador: "El humo es temporal, la renta es permanente."'}
+  if(c==='urbana'&&kind==='urban'&&['alta','central','densif'].includes(s)){styleScore.market++;return'🏢 Corredor inmobiliario: "FOT alto, vista al piedemonte, amenities de primera."'}
+  if(kind==='natural'||kind==='rural'){styleScore.green++;return'🍇 Productor: "No será un shopping, pero el oasis todavía respira."'}
+  if(kind==='community'){styleScore.popular++;return'🚌 Vecina de interfaz: "Al menos parece pensado para vivir y no sólo para especular."'}
+  if(c==='interfaces'){return'🚧 Técnico APOT: "Zona de interfaz: densa pero no tanto. Compleja pero no tanto."'}
+  return'📐 Planificador: "No es glamoroso, pero el plano no da vergüenza."';
+}
+function commentForCrisis(a){
+  if(a.includes('Restringir')||a.includes('Condicionar')||a.includes('Revisar')||a.includes('amortiguador')||a.includes('APOT')) return'📐 Equipo técnico: "Milagro: se decidió antes de que explotara todo."';
+  if(a.includes('Autorizar')||a.includes('expansión')) return'🏗️ Desarrollador: "Eso es visión de futuro. El futuro casualmente tiene amenities."';
+  if(a.includes('Vivienda')||a.includes('incentivos')) return'👥 Inquilino: "No pido utopía. Con no vivir a dos colectivos de todo alcanza."';
+  return'☕ Ciudadano random: "La zonificación es como el mate: si la cebás mal, todos protestan pero nadie cambia nada."';
+}
+function cityNickname(){
+  if(bombs.length+detonations>=4||state.conflict>75) return'El Prendefuegos Territorial';
+  if(styleScore.market>=styleScore.green&&styleScore.market>=styleScore.popular&&styleScore.market>2) return'El Emperador del FOT';
+  if(styleScore.green>=styleScore.market&&styleScore.green>=styleScore.popular&&styleScore.green>2) return'El Guardián del Oasis';
+  if(styleScore.popular>=styleScore.market&&styleScore.popular>=styleScore.green&&styleScore.popular>2) return'El Santo Patrono del Espacio Público';
+  return'El Planificador en Blanco';
+}
+
+// ============================================================
+// TURN
+// ============================================================
+function nextTurn(){
+  if(gameOver)return;
+  sfx.turnEnd();
+  tickBombs();
+  if(checkDefeat())return;
+  turnN++;
+  if(turnN>8){finishGame();return}
+  prev={...builtThisTurn};
+  actionsN=Math.max(0,Math.min(10,prev.urban+prev.industrial+prev.productive+prev.crisisBuild-prev.restrictive));
+  if(turnN<=3&&actionsN<2) actionsN=2;
+  builtThisTurn={urban:0,industrial:0,productive:0,restrictive:0,crisisBuild:0};
+  crisisUsed=false;
+  current=events[(turnN-1)%events.length];
+  crisisWrap.classList.remove('crisis-resolved');
+  crisisResolvedBadge.style.display='none';
+  selected=null;
+  story(`Turno ${turnN}: recibís ${actionsN} fichas.`);
+  sfx.crisis();
+  if(actionsN===0) citizenComment('🪑 Concejal confundido: "Planificaste tan sustentable que no hay presupuesto ni para mover una silla."');
+  render();
+}
+
+// ============================================================
+// DEFEAT / FINISH — rich end screens
+// ============================================================
+function checkDefeat(){
+  let reason='';
+  if(state.conflict>=100) reason='Derrota por conflicto territorial total: la ciudad se volvió ingobernable.';
+  else if(state.sustain<=0) reason='Derrota por colapso ambiental: el soporte físico territorial fue destruido.';
+  else if(state.equity<=0) reason='Derrota por colapso del valor de uso: la ciudad ya no puede ser habitada socialmente.';
+  else if(state.value<=0) reason='Derrota por colapso económico: la ciudad perdió dinámica de inversión y producción.';
+  else if(state.water<=0) reason='Derrota hídrica: el oasis mendocino dejó de sostener la urbanización (Ley 7.722).';
+  else if(state.risk>=100) reason='Derrota por colapso del riesgo territorial: aluviones, sismos e inundaciones volvieron el territorio inhabitable. El Plan de Gestión de Riesgos no fue activado a tiempo.';
+  else if(detonations>=5) reason='Derrota por cadena de incompatibilidades territoriales. Las bombas consumieron el sistema.';
+  else if(state.popUrban>85) reason='Derrota por hiperurbanización: más del 85% de la población quedó urbana. Oasis perdido.';
+  else if(state.popRural>85) reason='Derrota por bloqueo: más del 85% quedó rural. La ciudad no pudo consolidarse.';
+  if(reason){
+    gameOver=true;
+    sfx.defeat();
+    setTimeout(()=>buildEndScreen(false,reason),600);
+    return true;
+  }
+  return false;
+}
+
+function finishGame(){
+  if(gameOver)return;
+  gameOver=true;
+  sfx.victory();
+  setTimeout(()=>buildEndScreen(true,''),600);
+}
+
+// Analyse built tiles and produce diagnosis
+function analyseTerritorio(){
+  const built=grid.filter(h=>h.built);
+  const total=built.length;
+  if(total===0) return{strengths:[],problems:[],profile:'Sin desarrollo'};
+
+  const count={};
+  built.forEach(h=>{
+    const k=h.cls+'_'+zonings[h.zon].subs[h.sub].kind;
+    count[k]=(count[k]||0)+1;
+    count['cls_'+h.cls]=(count['cls_'+h.cls]||0)+1;
+    count['t_'+h.t]=(count['t_'+h.t]||0)+1;
+    count['kind_'+zonings[h.zon].subs[h.sub].kind]=(count['kind_'+zonings[h.zon].subs[h.sub].kind]||0)+1;
+  });
+
+  const pct=k=>Math.round((count[k]||0)/total*100);
+  const strengths=[], problems=[];
+
+  // STRENGTHS
+  if(state.water>70)       strengths.push('💧 Oasis preservado: el recurso hídrico se mantuvo sobre niveles seguros.');
+  if(state.sustain>65)     strengths.push('🌿 Sustentabilidad sólida: el soporte físico territorial aguantó la expansión.');
+  if(state.compact>60)     strengths.push('🏙️ Ciudad compacta: la estructura urbana es eficiente en el uso de redes e infraestructura.');
+  if(state.equity>65)      strengths.push('⚖️ Valor de uso preservado: los sectores populares mantuvieron acceso a la ciudad.');
+  if(state.conflict<35)    strengths.push('🤝 Conflicto bajo: los usos del suelo se gestionaron con legitimidad técnica.');
+  if(state.risk<30)        strengths.push('🛡️ Riesgo controlado: se evitó la urbanización en zonas de amenaza natural.');
+  if(bombs.length===0)     strengths.push('✅ Sin bombas activas: las incompatibilidades fueron corregidas a tiempo.');
+  if(detonations===0)      strengths.push('🏆 Cero explosiones territoriales: ninguna incompatibilidad alcanzó punto de crisis.');
+  if(pct('cls_natural')>=15) strengths.push('🌳 Áreas naturales significativas: la reserva ambiental tiene presencia en el tablero.');
+  if(pct('cls_irrigada')>=15) strengths.push('🍇 Rural irrigado preservado: el oasis productivo mendocino tiene representación.');
+  if(pct('kind_community')>=20) strengths.push('🟩 Equipamiento comunitario: la ciudad tiene base de espacio público y valor de uso.');
+
+  // PROBLEMS
+  if(state.water<40)       problems.push('💧 Oasis en riesgo crítico: la presión sobre el recurso hídrico fue excesiva.');
+  if(state.sustain<40)     problems.push('🌿 Soporte ambiental degradado: el territorio perdió capacidad de sustentación.');
+  if(state.compact<30)     problems.push('🏚️ Ciudad muy difusa: la baja densidad genera altos costos de infraestructura y movilidad.');
+  if(state.equity<40)      problems.push('⚖️ Desigualdad territorial marcada: el valor de uso cedió ante el valor de cambio.');
+  if(state.conflict>60)    problems.push('⚡ Conflicto alto: las decisiones territoriales generaron tensiones sin resolver.');
+  if(state.risk>60)        problems.push('⚠️ Riesgo territorial acumulado: construcción en zonas de amenaza natural sin mitigación.');
+  if(bombs.length>0)       problems.push(`💣 ${bombs.length} bomba(s) activa(s): incompatibilidades que aún no explotaron pero amenazan el sistema.`);
+  if(detonations>0)        problems.push(`💥 ${detonations} explosión(es): las incompatibilidades llegaron a punto de crisis y dañaron el territorio.`);
+  if(pct('t_oasis')>20&&count['kind_urban']>2) problems.push('🚫 Urbanización sobre oasis: uso incompatible con la Ley 8.999 de ordenamiento territorial.');
+  if(pct('cls_urbana')>60) problems.push('🏗️ Monocultivo urbano: el tablero carece de diversidad de clasificaciones territoriales.');
+  if(pct('kind_industrial')>30) problems.push('🏭 Concentración industrial excesiva: alto impacto ambiental y riesgo de conflicto.');
+  if(total<6)              problems.push('📉 Baja densidad de decisiones: el territorio quedó mayormente sin planificar.');
+
+  // PROFILE
+  let profile='Ciudad en desarrollo';
+  const urb=pct('cls_urbana'), irr=pct('cls_irrigada'), nat=pct('cls_natural'), int=pct('cls_interfaces');
+  if(urb>55) profile='Ciudad expansiva con presión sobre el oasis';
+  else if(irr>30&&nat>15) profile='Territorio productivo-natural equilibrado';
+  else if(int>30&&urb>20) profile='Ciudad de interfaces activas con gradiente urbano-rural';
+  else if(nat>25) profile='Territorio de alta preservación ambiental';
+  else if(state.compact>55&&state.equity>55) profile='Ciudad compacta con equidad territorial';
+  else if(state.conflict>60) profile='Territorio en disputa con conflictos no resueltos';
+  if(styleScore.chaos>3) profile='Ciudad caótica: alta incompatibilidad territorial';
+
+  return{strengths,problems,profile};
+}
+
+function buildEndScreen(isVictory, defeatReason){
+  const scoreVal=Math.round(
+    (state.sustain+state.water+state.compact+state.equity+(100-state.risk)+(100-state.conflict))/6
+    - bombs.length*4 + state.build*0.12 - detonations*6
+  );
+  const score=Math.max(0,Math.min(100,scoreVal));
+  const analysis=analyseTerritorio();
+
+  // Score tier
+  let tier, tierColor, tierIcon;
+  if(!isVictory){ tier='Derrota anticipada'; tierColor='#f87171'; tierIcon='💥'; }
+  else if(score>=75){ tier='Ciudad equilibrada del oasis'; tierColor='#4ade80'; tierIcon='🏆'; }
+  else if(score>=55){ tier='Ciudad en construcción'; tierColor='#fbbf24'; tierIcon='🏗️'; }
+  else if(score>=35){ tier='Ciudad en disputa territorial'; tierColor='#fb923c'; tierIcon='⚡'; }
+  else { tier='Territorio colapsado'; tierColor='#f87171'; tierIcon='💀'; }
+
+  // Score bar segments
+  const indDefs=[
+    {k:'sustain',n:'Sustentabilidad',c:'#4ade80',pos:true},
+    {k:'water',n:'Agua/oasis',c:'#38bdf8',pos:true},
+    {k:'equity',n:'Equidad',c:'#a78bfa',pos:true},
+    {k:'value',n:'Valor econ.',c:'#fbbf24',pos:true},
+    {k:'conflict',n:'Conflicto',c:'#f87171',pos:false},
+    {k:'risk',n:'Riesgo',c:'#fb923c',pos:false},
+    {k:'compact',n:'Compacidad',c:'#2dd4bf',pos:true},
+  ];
+
+  const barsHtml=indDefs.map(d=>{
+    const v=Math.round(state[d.k]);
+    const pct=d.pos?v:(100-v);
+    const danger=(d.pos&&v<30)||(!d.pos&&v>70);
+    return`<div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--font-mono);margin-bottom:2px">
+        <span style="color:${danger?'#f87171':d.c}">${d.n}</span>
+        <span style="color:${danger?'#f87171':'var(--text)'}">${v}</span>
+      </div>
+      <div style="height:6px;background:#0a1810;border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${danger?'#f87171':d.c};border-radius:99px;transition:width .6s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const strengthsHtml=analysis.strengths.length
+    ?analysis.strengths.map(s=>`<div style="padding:5px 0;border-bottom:1px solid #1a3028;font-size:12px;color:#86efac;line-height:1.4">${s}</div>`).join('')
+    :'<div style="color:var(--muted);font-size:12px">Sin fortalezas identificadas.</div>';
+
+  const problemsHtml=analysis.problems.length
+    ?analysis.problems.map(p=>`<div style="padding:5px 0;border-bottom:1px solid #2a1010;font-size:12px;color:#fca5a5;line-height:1.4">${p}</div>`).join('')
+    :'<div style="color:var(--muted);font-size:12px">Sin problemas críticos identificados.</div>';
+
+  // Apodo
+  const ap=cityNickname();
+
+  document.getElementById('endbox').innerHTML=`
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:52px;margin-bottom:8px">${tierIcon}</div>
+      <div style="font-family:var(--font-title);font-size:26px;font-weight:800;color:${tierColor};margin-bottom:4px">${tier}</div>
+      ${isVictory?`<div style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">8 turnos completados · Apodo: <b style="color:var(--yellow)">${ap}</b></div>`
+        :`<div style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">Partida terminada en turno ${turnN} · Apodo: <b style="color:var(--yellow)">${ap}</b></div>`}
+    </div>
+
+    ${!isVictory?`<div style="background:#1a0808;border:1px solid #4a1a1a;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#fca5a5;line-height:1.5">⛔ ${defeatReason}</div>`:''}
+
+    <!-- SCORE -->
+    <div style="background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:14px;text-align:center">
+      <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Puntaje final</div>
+      <div style="font-family:var(--font-title);font-size:52px;font-weight:800;color:${tierColor};line-height:1">${score}</div>
+      <div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">/100</div>
+      <div style="margin-top:10px;height:10px;background:#0a1810;border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${score}%;background:linear-gradient(90deg,#f87171,#fbbf24,#4ade80);border-radius:99px;transition:width 1s ease"></div>
+      </div>
+    </div>
+
+    <!-- PERFIL + INDICADORES -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:12px">
+        <div style="font-size:10px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Perfil de ciudad</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.4">${analysis.profile}</div>
+        <div style="font-size:10px;font-family:var(--font-mono);color:var(--muted);margin-bottom:5px">Estadísticas</div>
+        <div style="font-size:11px;color:var(--text);font-family:var(--font-mono);line-height:1.7">
+          Fichas colocadas: ${grid.filter(h=>h.built).length}<br>
+          Bombas activas: ${bombs.length}<br>
+          Explosiones: ${detonations}<br>
+          Urbana: ${Math.round(state.popUrban)}% · Rural: ${Math.round(state.popRural)}%
+        </div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:12px">
+        <div style="font-size:10px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Indicadores</div>
+        ${barsHtml}
+      </div>
+    </div>
+
+    <!-- FORTALEZAS -->
+    <div style="background:#050e08;border:1px solid #1a4028;border-radius:12px;padding:12px;margin-bottom:10px">
+      <div style="font-size:10px;font-family:var(--font-mono);color:#4ade80;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px">✅ Fortalezas identificadas</div>
+      ${strengthsHtml}
+    </div>
+
+    <!-- PROBLEMAS -->
+    <div style="background:#0e0505;border:1px solid #4a1a1a;border-radius:12px;padding:12px;margin-bottom:16px">
+      <div style="font-size:10px;font-family:var(--font-mono);color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px">⚠️ Problemas y desafíos</div>
+      ${problemsHtml}
+    </div>
+
+    <button class="btn btn-green" style="width:100%;font-size:14px;padding:12px" onclick="location.reload()">🔄 Nueva partida</button>
+  `;
+  endOverlay.style.display='block';
+}
+
+// ============================================================
+// PRESET TILES
+// ============================================================
+function buildTileList(){
+  tileListEl.innerHTML=tilePresets.map(t=>`
+    <button class="preset-btn ${t.id===preset?'active':''}" data-id="${t.id}">
+      <span class="pico">${t.icon}</span>
+      <span><span class="pname">${t.name}</span><span class="pcls">${t.pcls}</span></span>
+    </button>`).join('');
+  document.querySelectorAll('.preset-btn').forEach(el=>el.onclick=()=>{
+    preset=el.dataset.id;
+    document.querySelectorAll('.preset-btn').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    renderSelectors();
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+clsSel.onchange=fillZon;
+zonSel.onchange=fillSub;
+subSel.onchange=updatePreview;
+document.getElementById('place').onclick=placeTile;
+document.getElementById('next').onclick=nextTurn;
+document.getElementById('finish').onclick=finishGame;
+document.getElementById('inspect').onclick=()=>{if(selected)updateHexInfo()};
+
+makeGrid();
+
+// Set SVG intrinsic size to logical grid bounds
+(()=>{
+  const xs=grid.map(h=>h.x), ys=grid.map(h=>h.y), s=42;
+  const W=Math.max(...xs)+s+10, H=Math.max(...ys)+s+10;
+  board.setAttribute('width',W);
+  board.setAttribute('height',H);
+  board.setAttribute('viewBox',`0 0 ${W} ${H}`);
+})();
+
+// Init pan/zoom and center
+initPan();
+// Center after layout settles
+requestAnimationFrame(()=>requestAnimationFrame(centerGrid));
+
+buildTileList();
+renderSelectors();
+render();
+story('Partida iniciada. Marco normativo: Ley 8.051/2009 (clasificación) y Ley 8.999/2017 (zonificación). El oasis y el piedemonte esperan tus decisiones.');
+citizenComment('🗺️ Voz territorial: "Arranca la gestión. Nadie sabe qué ciudad va a salir, pero todos ya tienen una queja — y un abogado — preparados."');
+</script>
+</body>
+</html>
